@@ -1,0 +1,15 @@
+{
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    "\\[class\\.([^\\]\\s]*)\\]",           // Finds classes in host: { class: '...' }
+    "template:\\s*`([^`]*)`",               // Finds classes in inline template: `...`
+    "template:\\s*'([^']*)'",               // Finds classes in inline template: '...'
+    "\\[class\\.([^\\]\"\\s]*)\\]"          // Support dynamic class syntax like [class.my-class]
+  ],
+  "tailwindCSS.experimental.configFile": "src/styles/tailwind.css"
+}

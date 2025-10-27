@@ -33,6 +33,8 @@
               }
             ],
             "styles": [
+              "src/styles/material.scss",
+              "src/styles/tailwind.css",
               "src/styles.scss"
             ]
           },
