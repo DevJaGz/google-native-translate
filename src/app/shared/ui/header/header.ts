@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IconButton } from '../icon-button/icon-button';
+import { Logo } from '../logo/logo';
 
 @Component({
   selector: 'app-header',
-  imports: [IconButton],
+  imports: [IconButton, Logo],
   template: `
-    <header class="flex border-b border-b-border-shadow p-2">
+    <header class="flex items-center border-b border-b-border-shadow p-2">
       <app-icon-button tooltipText="Main Menu" ariaLabel="Main Menu" size="large" class="mx-1"> Menu </app-icon-button>
+      <app-logo  />
     </header>
   `,
   styles: ``,
