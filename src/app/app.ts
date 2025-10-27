@@ -1,11 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Header } from '@shared/ui';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Header, MatSidenavModule],
   template: `
-    <router-outlet></router-outlet>
+    <mat-drawer-container autosize class="h-full [&>.mat-drawer-backdrop]:bg-transparent!">
+      <mat-drawer mode="over"> Sidenav content! </mat-drawer>
+      <mat-drawer-content>
+        <app-header />
+        <router-outlet></router-outlet>
+      </mat-drawer-content>
+    </mat-drawer-container>
   `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,

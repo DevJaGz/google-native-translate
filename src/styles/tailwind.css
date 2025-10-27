@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+
+@theme  {
+  --color-icon-color: #5f6368;
+  --color-border-shadow: rgb(0 0 0 / 12%);
+}
