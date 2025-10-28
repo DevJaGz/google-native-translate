@@ -1,6 +1,6 @@
-@use 'variables.css';
-@use 'tailwind.css';
-@use 'material.scss';
+@use './styles/variables.scss';
+@use './styles/material.scss';
+@import './styles/tailwind.css';
 
 body {
   // Default the application to a light color theme. This can be changed to
