@@ -13,7 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       [disabled]="isDisabled()"
       [attr.aria-label]="ariaLabel()"
     >
-      <mat-icon>
+      <mat-icon class="text-primary!">
         <span class="material-symbols-outlined">
           <ng-content />
         </span>

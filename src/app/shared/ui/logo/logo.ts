@@ -19,8 +19,8 @@ import { RouterLink } from '@angular/router';
         <span>l</span>
         <span>e</span>
       </div>
-      <span class="text-icon-color line-clamp-1"
-        ><strong class="font-normal text-neutral-700 tracking-[1px]">Native</strong> Translate</span
+      <span class="line-clamp-1"
+        ><strong class="font-normal text-secondary tracking-[1px]">Native</strong> Translate</span
       >
     </a>
   `,

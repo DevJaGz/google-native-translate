@@ -12,11 +12,12 @@ html {
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: 'Google Sans',
+      typography: var(--google-base-font),
       density: 0,
     )
   );
   @include mat.tooltip-overrides((
-    container-color: #433e3fe6,
+    container-color: var(--over-surface-dark),
+    supporting-text-color: var(--text-primary),
   ));
 }
