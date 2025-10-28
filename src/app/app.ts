@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from '@shared/ui';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { Header } from '@ui/layout';
 
 @Component({
   selector: 'app-root',

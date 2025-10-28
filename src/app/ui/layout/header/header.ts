@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IconButton } from '../icon-button/icon-button';
-import { Logo } from '../logo/logo';
+import { IconButton, Logo } from '@shared/ui';
+
+
 
 @Component({
   selector: 'app-header',
