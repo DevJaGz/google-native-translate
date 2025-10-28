@@ -17,8 +17,8 @@ html {
     )
   );
   @include mat.tooltip-overrides((
-    container-color: var(--over-surface-dark),
-    supporting-text-color: var(--text-primary),
+    container-color: var(--over-surface-primary),
+    supporting-text-color: var(--over-text-primary),
     supporting-text-size: calc(var(--size-base) * 0.875)
   ));
 }

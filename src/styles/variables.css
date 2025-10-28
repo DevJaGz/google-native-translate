@@ -10,11 +10,11 @@
   --white: oklch(100% 0 0);
   --black: oklch(0 0 0);
   --text-primary: oklch(50% 0.0095 254);
-  --text-secondary: oklch(17.5% 0.005 254);
+  --text-secondary: oklch(40% 0.00399 264.56);
   --surface-primary: var(--white);
   --shadow-1: oklch(0 0 0 / 0.12);
-  --over-surface-dark: oklch(95.815% 0.00011 271.152 / 0.902);
-
+  --over-surface-primary: oklch(39.773% 0.01246 267.233);
+  --over-text-primary: var(--white);
   --size-base: 16px;
 }
 
@@ -25,6 +25,6 @@
     --text-primary: var(--white);
     --text-secondary: oklch(80% 0 0);
     --shadow-1: oklch(19.125% 0.00002 271.152 / 0.6);
-    --over-surface-dark: oklch(24.696% 0.00989 355.55 / 0.902);
+    --over-surface-primary: oklch(30.464% 0.01164 264.416);
   }
 }
