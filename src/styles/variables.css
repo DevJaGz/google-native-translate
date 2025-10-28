@@ -21,10 +21,10 @@
 /* Dark color theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface-primary: oklch(34.07% 0.00004 271.152);
-    --text-primary: var(--white);
-    --text-secondary: oklch(80% 0 0);
-    --shadow-1: oklch(19.125% 0.00002 271.152 / 0.6);
+    --surface-primary: oklch(22.578% 0.00249 248.175);
+    --text-primary: oklch(84.968% 0.00823 217.183);
+    --text-secondary: var(--white);
+    --shadow-1:  var(--black);
     --over-surface-primary: oklch(30.464% 0.01164 264.416);
   }
 }
