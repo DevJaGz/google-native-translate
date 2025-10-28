@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Header } from '@ui/layout';
+import { Store } from '@ui/store';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Header, MatSidenavModule],
   template: `
     <mat-drawer-container autosize class="h-full [&>.mat-drawer-backdrop]:bg-transparent! bg-surface-primary! text-primary!">
-      <mat-drawer mode="over"> Sidenav content! </mat-drawer>
+      <mat-drawer [opened]="store.sidenav.isOpen()" mode="over"> Sidenav content! </mat-drawer>
       <mat-drawer-content >
         <app-header />
         <router-outlet></router-outlet>
@@ -18,4 +19,6 @@ import { Header } from '@ui/layout';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {}
+export class App {
+  protected readonly store = inject(Store);
+}
