@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { Header, OperationMode, Sidenav } from '@ui/layout';
+import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode],
+  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode, LanguageSelectors],
   template: `
     <mat-drawer-container
       autosize
@@ -23,7 +23,17 @@ import { Store } from '@ui/store';
         <app-header />
         <main class="max-w-7xl mx-auto">
           <app-operation-mode class="mt-4" />
+          <app-language-selectors class="mt-4" />
           <router-outlet />
+          <div class="flex justify-end">
+            <a
+              class="italic hover:underline transition-transform cursor-pointer text-xs"
+              href="https://github.com/DevJaGz/google-native-translate"
+              target="_blank"
+              rel="noreferrer noopener"
+              >Send feedback</a
+            >
+          </div>
         </main>
       </mat-drawer-content>
     </mat-drawer-container>
