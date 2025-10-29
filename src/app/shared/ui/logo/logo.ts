@@ -44,7 +44,7 @@ import { RouterLink } from '@angular/router';
    }
   `,
   host: {
-    'style.display': 'contents',
+    '[style.display]': '"block"',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

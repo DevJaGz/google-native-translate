@@ -17,7 +17,7 @@ import { Store } from '@ui/store';
   `,
   styles: ``,
   host: {
-    'style.display': 'contents',
+    '[style.display]': '"block"',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -17,7 +17,7 @@ import { Icon } from '../icon/icon';
     </button>
   `,
   host: {
-    'style.display': 'contents',
+    '[style.display]': '"block"',
     '[class.large]': "size() === 'large'",
   },
   styles: `
