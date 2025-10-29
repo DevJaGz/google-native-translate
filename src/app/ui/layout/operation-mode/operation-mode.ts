@@ -14,7 +14,7 @@ import { TabButton } from '@shared/ui';
   `,
   styles: ``,
   host: {
-    style: 'display:block',
+    '[style.display]': '"block"',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

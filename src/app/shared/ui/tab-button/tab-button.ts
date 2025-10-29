@@ -13,8 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
     >
       <mat-icon class="text-google-mid-blue! w-fit! grid! ">
         <span class="material-symbols-outlined text-xl!">
-         <ng-content select="[slot='icon']" />
-      </span>
+          <ng-content select="[slot='icon']" />
+        </span>
       </mat-icon>
       <strong class="text-google-mid-blue font-medium">
         <ng-content select="[slot='label']" />
@@ -22,6 +22,9 @@ import { MatIconModule } from '@angular/material/icon';
     </button>
   `,
   styles: ``,
+  host: {
+    '[style.display]': '"block"',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabButton {
