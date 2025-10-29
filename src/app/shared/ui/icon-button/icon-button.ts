@@ -1,11 +1,11 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-icon-button',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatButtonModule, Icon, MatTooltipModule],
   template: `
     <button
       matIconButton
@@ -13,11 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       [disabled]="isDisabled()"
       [attr.aria-label]="ariaLabel()"
     >
-      <mat-icon class="text-primary!">
-        <span class="material-symbols-outlined">
-          <ng-content />
-        </span>
-      </mat-icon>
+      <app-icon><ng-content /></app-icon>
     </button>
   `,
   host: {
