@@ -13,8 +13,8 @@ import { Store } from '@ui/store';
       class="h-full [&>.mat-drawer-backdrop]:bg-transparent! bg-surface-primary! text-primary!"
     >
       <mat-drawer
-        [opened]="store.sidenav.isOpen()"
         mode="over"
+        [opened]="store.sidenav.isOpen()"
         (closed)="store.sidenav.setIsOpen(false)"
       >
         <app-sidenav />
