@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { Header, Sidenav } from '@ui/layout';
+import { Header, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule],
+  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode],
   template: `
     <mat-drawer-container
       autosize
@@ -21,7 +21,10 @@ import { Store } from '@ui/store';
       </mat-drawer>
       <mat-drawer-content>
         <app-header />
-        <router-outlet></router-outlet>
+        <main class="max-w-7xl mx-auto">
+          <app-operation-mode />
+          <router-outlet />
+        </main>
       </mat-drawer-content>
     </mat-drawer-container>
   `,

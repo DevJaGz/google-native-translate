@@ -26,7 +26,7 @@ import { Icon } from '../icon/icon';
       height: calc(var(--size, 40px) * 1px);
       display: grid;
       place-items: center;
-      color: var(--color-icon-color);
+      color: var(--text-secondary);
 
       &:disabled {
         opacity: 0.5;

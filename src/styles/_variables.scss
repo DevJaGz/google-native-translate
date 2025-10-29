@@ -1,20 +1,40 @@
 :root {
-  /* Google */
-  --google-blue: oklch(63.04% 0.18011 259.972);
-  --google-red: oklch(62.571% 0.20583 29.062);
-  --google-yellow: oklch(83.043% 0.16974 83.995);
-  --google-green: oklch(64.756% 0.16026 148.518);
+  /* Google Word */
+  --google-blue: #4285f4;
+  --google-red: #ea4335;
+  --google-yellow: #fbbc05;
+  --google-green: #34a853;
+
   --google-base-font: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
-  --white: oklch(100% 0 0);
-  --black: oklch(0 0 0);
-  --text-primary: oklch(50% 0.0095 254);
-  --text-secondary: oklch(40% 0.00399 264.56);
+  --google-light-blue: #f8fafd;
+  --google-gray-blue: #f5f5f5;
+  --google-pale-blue: #e9eef6;
+  --google-sky-blue: #1a73e8;
+  --google-dark-gray: #3c4043;
+  --google-darker-gray: #3c4043e6;
+  --google-gray: #757575;
+  --google-bright-blue: #2962ff;
+  --google-mid-blue: #1967d2;
+  --google-dark-gray-2: #5f6368;
+  --google-deep-blue: #0b57d0;
+  --google-medium-gray: #444746;
+  --google-neutral-gray: #444444;
+  --google-light-gray: #3c404361;
+  --google-deep-black: #1f1f1f;
+  --google-black-de: #000000de;
+  --google-black-8a: #0000008a;
+  --google-black-0a: #0000000a;
+
+  --white: #ffffff;
+  --black: #000000;
+  --text-primary: #606469;
+  --text-secondary: #47484a;
   --surface-primary: var(--white);
-  --shadow-1: oklch(0 0 0 / 0.12);
-  --elevation-1: 0 0 16px rgba(0,0,0,.28);
-  --over-surface-primary: oklch(39.773% 0.01246 267.233);
+  --shadow-1: #0000001f;
+  --elevation-1: 0 0 16px #00000047;
+  --over-surface-primary: #44474e;
   --over-text-primary: var(--white);
   --size-base: 16px;
 }
@@ -22,10 +42,10 @@
 /* Dark color theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface-primary: oklch(22.578% 0.00249 248.175);
-    --text-primary: oklch(84.968% 0.00823 217.183);
+    --surface-primary: #1b1c1d;
+    --text-primary: #c8cfd1;
     --text-secondary: var(--white);
     --shadow-1:  var(--black);
-    --over-surface-primary: oklch(30.464% 0.01164 264.416);
+    --over-surface-primary: #2c2f35;
   }
 }

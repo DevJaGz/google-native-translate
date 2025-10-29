@@ -1,10 +1,30 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-icon-color: var(--text-secondary);
   --color-border-shadow: var(--shadow-1);
   --font-family-base: var(--google-base-font);
   --color-surface-primary: var(--surface-primary);
   --color-primary: var(--text-primary);
   --color-secondary: var(--text-secondary);
+  --color-google-blue: var(--google-blue);
+  --color-google-red: var(--google-red);
+  --color-google-yellow: var(--google-yellow);
+  --color-google-green: var(--google-green);
+  --color-google-light-blue: var(--google-light-blue);
+  --color-google-gray-blue: var(--google-gray-blue);
+  --color-google-pale-blue: var(--google-pale-blue);
+  --color-google-sky-blue: var(--google-sky-blue);
+  --color-google-dark-gray: var(--google-dark-gray);
+  --color-google-darker-gray: var(--google-darker-gray);
+  --color-google-gray: var(--google-gray);
+  --color-google-bright-blue: var(--google-bright-blue);
+  --color-google-mid-blue: var(--google-mid-blue);
+  --color-google-deep-blue: var(--google-deep-blue);
+  --color-google-medium-gray: var(--google-medium-gray);
+  --color-google-neutral-gray: var(--google-neutral-gray);
+  --color-google-light-gray: var(--google-light-gray);
+  --color-google-deep-black: var(--google-deep-black);
+  --color-google-black-de: var(--google-black-de);
+  --color-google-black-8a: var(--google-black-8a);
+  --color-google-black-0a: var(--google-black-0a);
 }

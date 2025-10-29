@@ -30,7 +30,12 @@ html {
       container-divider-color: var(--shadow-1),
       container-elevation-shadow: var(--elevation-1),
       container-shape: 0,
-      container-width: 280px
+      container-width: 280px,
+    )
+  );
+  @include mat.fab-overrides(
+    (
+      container-shape: 4px,
     )
   );
 }
