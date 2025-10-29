@@ -20,8 +20,6 @@ import { Store } from '@ui/store';
           </app-icon-button>
         </div>
         <app-logo />
-      </div>
-      <div class="p-4 ">
         <div class="flex gap-1 items-center flex-wrap">
           <app-icon>account_circle</app-icon>
           <div class="flex items-center gap-1">
