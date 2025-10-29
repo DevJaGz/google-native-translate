@@ -39,7 +39,7 @@ html {
   @include mat.button-overrides(
     (
       outlined-container-shape: 4px,
-      outlined-horizontal-padding: 14px,
+      outlined-horizontal-padding: 16px,
       outlined-container-height: 36px,
       outlined-outline-width: fit-content,
       outlined-outline-color: var(--google-soft-gray),

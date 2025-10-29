@@ -8,10 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
   template: `
     <div class="grid">
       <button matButton="outlined" aria-label="Text translation" class="w-fit mat-tab-button border! bg-google-blue-1f!">
-        <mat-icon class="grid! text-google-mid-blue!">
-          <span class="material-symbols-outlined"> Translate </span>
+        <mat-icon class="text-google-mid-blue! w-fit! grid! ">
+          <span class="material-symbols-outlined text-xl!"> Translate </span>
         </mat-icon>
-        <strong class="text-google-mid-blue">Text</strong>
+        <strong class="text-google-mid-blue font-medium">Text</strong>
       </button>
     </div>
   `,
