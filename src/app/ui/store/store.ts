@@ -1,10 +1,10 @@
-import { inject } from '@angular/core';
-import { SidenavStateFeature, withSidenavStore} from './sidenav';
-import { signalStore } from '@ngrx/signals';
+import { inject, InjectionToken } from '@angular/core';
+import { SidenavStore } from './sidenav';
 
-export type State = SidenavStateFeature;
 
-export const Store = signalStore(
-  { providedIn: 'root' },
-  withSidenavStore()
-);
+export const Store = new InjectionToken('App Store', {
+  providedIn: 'root',
+  factory: () => ({
+    sidenav: inject(SidenavStore),
+  }),
+});

@@ -8,7 +8,7 @@ import { Store } from '@ui/store';
   template: `
     <header class="flex items-center border-b border-b-border-shadow p-2">
       <app-icon-button tooltipText="Main Menu" ariaLabel="Main Menu" size="large" class="mx-1"
-      (click)="store.toggleSidenav()" (keydown.enter)="store.toggleSidenav()"
+      (click)="store.sidenav.toggle()" (keydown.enter)="store.sidenav.toggle()"
       >
         Menu
       </app-icon-button>
