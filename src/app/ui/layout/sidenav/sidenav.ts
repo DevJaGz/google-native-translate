@@ -7,7 +7,7 @@ import { Store } from '@ui/store';
   selector: 'app-sidenav',
   imports: [Logo, IconButton, Icon, MatTooltip],
   template: `
-    <aside>
+    <aside class="h-full grid grid-rows-[auto_1fr]">
       <div class="pl-4 pt-1 pr-1 pb-4 border-b border-b-border-shadow">
         <div class="flex justify-end">
           <app-icon-button
@@ -21,7 +21,7 @@ import { Store } from '@ui/store';
         </div>
         <app-logo />
       </div>
-      <div class="p-4">
+      <div class="p-4 grid place-items-center">
         <div class="flex gap-1 items-center flex-wrap">
           <app-icon>account_circle</app-icon>
           <div class="flex items-center gap-1">
