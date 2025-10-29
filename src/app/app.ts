@@ -22,7 +22,7 @@ import { Store } from '@ui/store';
       <mat-drawer-content>
         <app-header />
         <main class="max-w-7xl mx-auto">
-          <app-operation-mode />
+          <app-operation-mode class="mt-4" />
           <router-outlet />
         </main>
       </mat-drawer-content>
