@@ -20,6 +20,10 @@ import { Store } from '@ui/store';
           </app-icon-button>
         </div>
         <app-logo />
+        <p class="mb-4">
+          This is an independent educational project and is not associated with, endorsed by, or
+          sponsored by Google LLC or Google Translate.
+        </p>
         <div class="flex gap-1 items-center flex-wrap">
           <app-icon>account_circle</app-icon>
           <div class="flex items-center gap-1">
