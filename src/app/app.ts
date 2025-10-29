@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode, LanguageSelectors],
+  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode, LanguageSelectors, MatTooltip],
   template: `
     <mat-drawer-container
       autosize
@@ -27,6 +28,7 @@ import { Store } from '@ui/store';
           <router-outlet />
           <div class="flex justify-end">
             <a
+              matTooltip="Open in new tab"
               class="italic hover:underline transition-transform cursor-pointer text-xs"
               href="https://github.com/DevJaGz/google-native-translate"
               target="_blank"
