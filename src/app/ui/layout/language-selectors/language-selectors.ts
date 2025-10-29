@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IconButton } from '@app/shared/ui';
+import { IconButton, LanguageSelectorButton } from '@app/shared/ui';
 
 @Component({
   selector: 'app-language-selectors',
-  imports: [IconButton],
+  imports: [IconButton, LanguageSelectorButton],
   template: `<div class="w-fit mx-auto">
-    <div class="flex items-center gap-2">From <app-icon-button>swap_horiz</app-icon-button> to</div>
+    <div class="flex items-center gap-2">
+      <app-language-selector-button>English</app-language-selector-button>
+      <app-icon-button>swap_horiz</app-icon-button>
+      <app-language-selector-button>Spanish</app-language-selector-button>
+    </div>
   </div>`,
   styles: ``,
   host: {
