@@ -9,7 +9,7 @@ import { Store } from '@ui/store';
   imports: [RouterOutlet, Header, MatSidenavModule],
   template: `
     <mat-drawer-container autosize class="h-full [&>.mat-drawer-backdrop]:bg-transparent! bg-surface-primary! text-primary!">
-      <mat-drawer [opened]="store.sidenav.isOpen()" mode="over"> Sidenav content! </mat-drawer>
+      <mat-drawer [opened]="store.sidenav.isOpen()" mode="over" (closed)="store.setSidenavIsOpen(false)"> Sidenav content! </mat-drawer>
       <mat-drawer-content >
         <app-header />
         <router-outlet></router-outlet>
