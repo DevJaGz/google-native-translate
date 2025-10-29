@@ -6,28 +6,30 @@ import { Store } from '@ui/store';
   selector: 'app-sidenav',
   imports: [Logo, IconButton],
   template: `
-    <aside class="p-4">
-      <div class="flex justify-end">
-        <app-icon-button
-          (click)="store.sidenav.setIsOpen(false)"
-          (keydown.enter)="store.sidenav.setIsOpen(false)"
-        >
-          Close
-        </app-icon-button>
+    <aside>
+      <div class="pl-4 pt-1 pr-1 pb-4 border-b border-b-border-shadow">
+        <div class="flex justify-end">
+          <app-icon-button
+            (click)="store.sidenav.setIsOpen(false)"
+            (keydown.enter)="store.sidenav.setIsOpen(false)"
+          >
+            Close
+          </app-icon-button>
+        </div>
+        <app-logo />
       </div>
-      <app-logo />
-      <dl class="mt-8 [&>dt]:font-semibold [&>dd+dt]:mt-2">
-        <dt>Author:</dt>
-        <dd>
+      <div class="p-4">
+        <span>
+          <strong>Author: </strong>
           <a
             class="text-primary! underline"
             href="https://juliangomez.dev"
             target="_blank"
             rel="noreferrer noopener"
             >juliangomez.dev</a
-          >
-        </dd>
-      </dl>
+          ></span
+        >
+      </div>
     </aside>
   `,
   styles: ``,
