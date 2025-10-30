@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RoutePath } from '@app/app.routes';
-import { TabButton } from '@app/ui/components';
-
+import { RoutePath } from '@shared/constants';
+import { TabButton } from '@ui/components';
 
 @Component({
   selector: 'app-operation-mode',

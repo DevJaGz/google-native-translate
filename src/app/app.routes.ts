@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
+import { RoutePath } from '@shared/constants';
 
-export const RoutePath = {
-  TEXT_TRANSLATION: 'text',
-} as const;
 
 export const routes: Routes = [
   {
