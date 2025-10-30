@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Languages, Usecase } from '../models';
 import { Observable } from 'rxjs';
+import { LanguagesPort } from '@core/ports';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ListLanguagesUsecase implements Usecase<void, Languages> {
+  readonly #languagesRepository = inject(LanguagesPort);
+
   execute(): Observable<Languages> {
-    throw new Error('Method not implemented.');
+    return this.#languagesRepository.listLanguages();
   }
 }
