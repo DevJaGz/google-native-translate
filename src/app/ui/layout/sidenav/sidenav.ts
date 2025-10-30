@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Icon, IconButton, Logo } from '@shared/ui';
+import { Icon, IconButton, Logo } from '@app/ui/components';
 import { Store } from '@ui/store';
 
 @Component({

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { IconButton, Logo } from '@shared/ui';
+import { IconButton, Logo } from '@app/ui/components';
+
 import { Store } from '@ui/store';
 
 @Component({

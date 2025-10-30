@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IconButton, LanguageSelectorButton } from '@app/shared/ui';
+import { IconButton, LanguageSelectorButton } from '@app/ui/components';
+
 
 @Component({
   selector: 'app-language-selectors',
