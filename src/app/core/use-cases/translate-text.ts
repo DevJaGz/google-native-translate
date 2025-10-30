@@ -1,18 +1,35 @@
-import { Injectable } from "@angular/core";
-import { Translation, Usecase } from "@core/models";
-import { Observable } from "rxjs";
-
-export type TranslateTextRequest = {
-  sourceLanguageCode: string;
-  targetLanguageCode: string;
-  text: string;
-}
+import { inject, Injectable } from '@angular/core';
+import {
+  TranslateTextRequest,
+  TranslateTextResponse,
+  Usecase,
+} from '@core/models';
+import { LanguageDetectorService, TranslatorService } from '@core/services';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Translation> {
-  execute(request: TranslateTextRequest): Observable<Translation> {
-    throw new Error("Method not implemented.");
+export class TranslateTextUsecase implements Usecase<TranslateTextRequest, TranslateTextResponse> {
+  readonly #languageDetector = inject(LanguageDetectorService);
+  readonly #translator = inject(TranslatorService);
+
+  execute(request: TranslateTextRequest): Observable<TranslateTextResponse> {
+    return new Observable<TranslateTextResponse>((subscriber) => {
+      const sourceLanguageCode$ = this.#languageDetector.detectLanguageCode(request, subscriber);
+      const translation$ = this.#translator.getTranslation(
+        request,
+        sourceLanguageCode$,
+        subscriber
+      );
+      translation$.subscribe({
+        next: (response) => subscriber.next(response),
+        error: (error) => {
+          subscriber.error(error);
+          subscriber.complete();
+        },
+        complete: () => subscriber.complete(),
+      });
+    });
   }
 }

@@ -20,4 +20,9 @@ export class InMemoryLanguagesRepository implements LanguagesPort {
   listLanguages(): Observable<Languages> {
     return of(LANGUAGES)
   }
+
+  listLanguageCodes(): Observable<string[]> {
+    const codes = LANGUAGES.map(lang => lang.code);
+    return of(codes);
+  }
 }

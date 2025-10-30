@@ -17,7 +17,6 @@ export type ProgressEvent = {
 };
 
 
-
 export type TranslationEvent = {
   type: 'translation';
   result: string;

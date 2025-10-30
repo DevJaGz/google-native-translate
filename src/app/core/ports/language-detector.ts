@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 
 export type LanguageDetectorRequest = {
   text: string;
-  sourceLanguage: string;
-  targetLanguage: string;
   options?: LanguageRequestOptions & { supportedLanguages?: string[] };
 }
 

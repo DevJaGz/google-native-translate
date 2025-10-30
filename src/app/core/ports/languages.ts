@@ -3,4 +3,5 @@ import { Languages } from "../models";
 
 export abstract class LanguagesPort {
   abstract listLanguages(): Observable<Languages>;
+  abstract listLanguageCodes(): Observable<string[]>;
 }
