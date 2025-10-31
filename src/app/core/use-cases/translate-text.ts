@@ -19,14 +19,7 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
   execute(request: TranslateTextRequest): Observable<TranslationText> {
     const sourceLanguageCode$ = this.handleSourceLanguageCode(request);
     return sourceLanguageCode$.pipe(
-      switchMap((sourceLanguageCode) => this.handleTranslation(request, sourceLanguageCode)),
-      catchError((error) =>
-        throwError(() =>
-          error instanceof AppError
-            ? error
-            : AppError.create({ type: ErrorType.UNKNOWN, originalError: error })
-        )
-      )
+      switchMap((sourceLanguageCode) => this.handleTranslation(request, sourceLanguageCode))
     );
   }
 
@@ -71,7 +64,7 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
         options: {
           abortSignal: request.translation?.abortSignal,
           monitor: request.translation?.monitor,
-        }
+        },
       })
       .pipe(
         map((translatedText) =>

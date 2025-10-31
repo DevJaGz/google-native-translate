@@ -11,4 +11,5 @@ export type TextTranslatorRequest = {
 
 export abstract class TextTranslatorPort {
   abstract translate(request: TextTranslatorRequest): Observable<string>;
+  abstract isSupported(): Observable<boolean>;
 };
