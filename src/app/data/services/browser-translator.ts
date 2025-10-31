@@ -7,7 +7,7 @@ import { SupportLangauges } from '@shared/models';
 @Injectable({
   providedIn: 'root',
 })
-export class BrowserTranslatorDetector
+export class BrowserTranslator
   extends BrowserTranslationApi<Translator>
   implements TextTranslatorPort
 {
