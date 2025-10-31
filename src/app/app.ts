@@ -1,13 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltip } from '@angular/material/tooltip';
+
+import { provideLanguages } from '@core/ports';
 import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
-import { MatTooltip } from '@angular/material/tooltip';
+import { InMemoryLanguagesRepository } from '@data/repositories';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, Header, MatSidenavModule, OperationMode, LanguageSelectors, MatTooltip],
+  imports: [
+    RouterOutlet,
+    Sidenav,
+    Header,
+    MatSidenavModule,
+    OperationMode,
+    LanguageSelectors,
+    MatTooltip,
+  ],
   template: `
     <mat-drawer-container
       autosize
@@ -41,6 +53,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     </mat-drawer-container>
   `,
   styles: [],
+  providers: [provideLanguages(InMemoryLanguagesRepository)],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {

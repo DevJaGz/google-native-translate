@@ -17,8 +17,8 @@
     "paths": {
       "@core": ["./src/app/core"],
       "@core/*": ["./src/app/core/*"],
-      "@infra": ["./src/app/infra"],
-      "@infra/*": ["./src/app/infra/*"],
+      "@data": ["./src/app/data"],
+      "@data/*": ["./src/app/data/*"],
       "@ui": ["./src/app/ui"],
       "@ui/*": ["./src/app/ui/*"],
       "@shared": ["./src/app/shared"],
