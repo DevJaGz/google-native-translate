@@ -4,5 +4,3 @@ export class Language {
     return new Language(data.code , data.name);
   }
 }
-
-export type Languages = Language[];

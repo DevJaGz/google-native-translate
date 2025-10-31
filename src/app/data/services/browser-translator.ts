@@ -74,7 +74,7 @@ export class BrowserTranslator
         sourceLanguage: request.sourceLanguageCode,
         targetLanguage: request.targetLanguageCode,
       })
-    ).pipe(map((result) => result !== 'available'));
+    ).pipe(map((result) => result === 'available'));
   }
 
   protected hasSameLanguages(request: LanguageDetectorRequest): boolean {

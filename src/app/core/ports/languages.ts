@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
-import { Languages } from '../models';
+import { Language } from '../models';
 import { EnvironmentProviders, makeEnvironmentProviders, Type } from '@angular/core';
 
 export abstract class LanguagesPort {
-  abstract listLanguages(): Observable<Languages>;
+  abstract listLanguages(): Observable<Language[]>;
   abstract listLanguageCodes(): Observable<string[]>;
 }
 
