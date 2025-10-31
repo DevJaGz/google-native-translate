@@ -1,5 +1,19 @@
 import { Injectable } from '@angular/core';
-import { from, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  finalize,
+  forkJoin,
+  from,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 import { LanguageDetectorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
@@ -51,7 +65,16 @@ export class BrowserTranslator
         sourceLanguage: request.sourceLanguageCode,
         targetLanguage: request.targetLanguageCode,
       })
-    ).pipe(map((available) => available !== 'unavailable'));
+    ).pipe(map((result) => result !== 'unavailable'));
+  }
+
+  protected isAvailable(request: SupportLangauges): Observable<boolean> {
+    return from(
+      Translator.availability({
+        sourceLanguage: request.sourceLanguageCode,
+        targetLanguage: request.targetLanguageCode,
+      })
+    ).pipe(map((result) => result !== 'available'));
   }
 
   protected hasSameLanguages(request: LanguageDetectorRequest): boolean {
@@ -62,9 +85,20 @@ export class BrowserTranslator
   }
 
   protected getSession(request: LanguageDetectorRequest): Observable<Translator> {
-    return this.session && this.hasSameLanguages(request)
-        ? of(this.session)
-        : this.createSession(request);
+    if (this.session && this.hasSameLanguages(request)) {
+      return of(this.session);
+    }
+
+    return this.isAvailable(request).pipe(
+      switchMap((isAvailable) =>
+        isAvailable ? this.createSession(request) : this.createAndMonitorSession(request)
+      ),
+      tap({
+        next: (session) => {
+          this.session = session;
+        },
+      })
+    );
   }
 
   protected createSession(request: LanguageDetectorRequest): Observable<Translator> {
@@ -72,25 +106,45 @@ export class BrowserTranslator
       Translator.create({
         sourceLanguage: request.sourceLanguageCode,
         targetLanguage: request.targetLanguageCode,
-        monitor: (event) => {
-          const monitorFn = request.options?.monitor;
-          if (!monitorFn) {
-            return;
-          }
-          this.progressListener = (result: Event) => {
-            const progress = result as ProgressEvent;
-            monitorFn(progress);
-          };
-          event.addEventListener('downloadprogress', this.progressListener);
-        },
         signal: request.options?.abortSignal,
       })
-    ).pipe(
-      tap({
-        next: (session) => {
-          this.session = session;
-        },
+    );
+  }
+
+  protected createAndMonitorSession(request: LanguageDetectorRequest): Observable<Translator> {
+    const progress$ = new Subject<ProgressEvent>();
+
+    const monitor = (event: EventTarget) => {
+      this.progressListener = (result: Event) => {
+        progress$.next(result as ProgressEvent);
+      };
+      event.addEventListener('downloadprogress', this.progressListener);
+    };
+
+    const session$ = from(
+      Translator.create({
+        sourceLanguage: request.sourceLanguageCode,
+        targetLanguage: request.targetLanguageCode,
+        signal: request.options?.abortSignal,
+        monitor,
       })
+    );
+
+    const ready$ = progress$.pipe(
+      tap({
+        next: (progress) => {
+          const monitorFn = request.options?.monitor;
+          if (monitorFn) {
+            monitorFn(progress);
+          }
+        },
+      }),
+      filter((progress) => progress.loaded === progress.total)
+    );
+
+    return combineLatest([session$, ready$]).pipe(
+      map(([session]) => session),
+      finalize(() => progress$.complete())
     );
   }
 }
