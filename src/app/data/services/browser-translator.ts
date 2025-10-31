@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { from, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { LanguageDetectorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
+import { AppError, ErrorType } from '@core/models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +16,9 @@ export class BrowserTranslator
   protected currentTargetLanguageCode: string | null = null;
 
   translate(request: LanguageDetectorRequest): Observable<string> {
-    const session$ =
-      this.session && this.hasSameLanguages(request)
-        ? of(this.session)
-        : this.createSession(request);
-    return session$.pipe(
+    const hasSupport$ = this.hasLanguageSupport(request);
+    const session$ = this.getSession(request);
+    const translate$ = session$.pipe(
       switchMap((session) =>
         from(session.translate(request.text, { signal: request.options?.abortSignal }))
       ),
@@ -30,12 +29,23 @@ export class BrowserTranslator
         },
       })
     );
+    return hasSupport$.pipe(
+      switchMap((hasSupport) =>
+        hasSupport
+          ? translate$
+          : throwError(() => AppError.create({ type: ErrorType.TEXT_TRANSLATION_NOT_SUPPORTED }))
+      )
+    );
   }
 
   isSupported(request: SupportLangauges): Observable<boolean> {
-    if (!('Translator' in self)) {
+    if (!('Translator' in self || !request.sourceLanguageCode || !request.targetLanguageCode)) {
       return of(false);
     }
+    return this.hasLanguageSupport(request);
+  }
+
+  protected hasLanguageSupport(request: SupportLangauges): Observable<boolean> {
     return from(
       Translator.availability({
         sourceLanguage: request.sourceLanguageCode,
@@ -49,6 +59,12 @@ export class BrowserTranslator
       this.currentSourceLanguageCode === request.sourceLanguageCode &&
       this.currentTargetLanguageCode === request.targetLanguageCode
     );
+  }
+
+  protected getSession(request: LanguageDetectorRequest): Observable<Translator> {
+    return this.session && this.hasSameLanguages(request)
+        ? of(this.session)
+        : this.createSession(request);
   }
 
   protected createSession(request: LanguageDetectorRequest): Observable<Translator> {
