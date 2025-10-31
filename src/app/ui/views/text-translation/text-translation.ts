@@ -12,12 +12,12 @@ import { AppError } from '@core/models';
   imports: [MatInputModule, MatFormFieldModule, MatButtonModule, JsonPipe],
   template: `
     <div>Available Languages:</div>
-    <pre>{{ listLanguages.value() | json }}</pre>
     <button matButton mat-raised-button color="primary" (click)="translate()">Translate</button>
     <mat-form-field class="w-full max-w-xl min-h-48">
       <mat-label>Leave a comment</mat-label>
       <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
     </mat-form-field>
+    <pre>{{ listLanguages.value() | json }}</pre>
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
