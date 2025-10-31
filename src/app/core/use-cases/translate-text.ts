@@ -42,6 +42,8 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
       switchMap((supportedLanguageCodes) =>
         this.#languageDetector.detect({
           text: request.text,
+          sourceLanguageCode: request.sourceLanguageCode,
+          targetLanguageCode: request.targetLanguageCode,
           options: {
             supportedLanguageCodes,
             abortSignal: request.detection?.abortSignal,
