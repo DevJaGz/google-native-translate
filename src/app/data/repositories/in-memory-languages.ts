@@ -4,7 +4,6 @@ import { LanguagesPort } from '@core/ports';
 import { Observable, of } from 'rxjs';
 
 const LANGUAGES: Language[] = [
-  Language.create({ code: 'und', name: 'Auto detect' }),
   Language.create({ code: 'en', name: 'English' }),
   Language.create({ code: 'es', name: 'Spanish' }),
   Language.create({ code: 'fr', name: 'French' }),

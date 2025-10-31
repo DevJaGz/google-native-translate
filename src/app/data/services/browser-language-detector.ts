@@ -1,5 +1,16 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, filter, finalize, from, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  finalize,
+  from,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { LanguageDetectorPort, LanguageDetectorRequest, LanguageDetectorResult } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 
@@ -10,8 +21,10 @@ export class BrowserLanguageDetector
   extends BrowserTranslationApi<LanguageDetector>
   implements LanguageDetectorPort
 {
+  protected supportedLanguageCodesSignature: string | null = null;
+
   detect(request: LanguageDetectorRequest): Observable<LanguageDetectorResult[]> {
-    const session$ = this.session ? of(this.session) : this.createSession(request);
+    const session$ = this.getSession(request);
     return session$.pipe(
       switchMap((session) =>
         from(session.detect(request.text, { signal: request.options?.abortSignal }))
@@ -38,10 +51,24 @@ export class BrowserLanguageDetector
     return from(LanguageDetector.availability()).pipe(map((result) => result === 'available'));
   }
 
+  protected hasSameSupportedLanguages(request: LanguageDetectorRequest): boolean {
+    const languages = request.options?.supportedLanguageCodes;
+    if (!languages) {
+      return true;
+    }
+
+    const signature = languages.join('|'); // 'en|fr|de'
+    const isSame = this.supportedLanguageCodesSignature === signature;
+    this.supportedLanguageCodesSignature = signature;
+    return isSame;
+  }
+
   protected getSession(request: LanguageDetectorRequest): Observable<LanguageDetector> {
-    if (this.session) {
+    if (this.session && this.hasSameSupportedLanguages(request)) {
       return of(this.session);
     }
+
+    this.destroySession();
 
     return this.isAvailable().pipe(
       switchMap((isAvailable) =>
@@ -64,7 +91,9 @@ export class BrowserLanguageDetector
     );
   }
 
-  protected createAndMonitorSession(request: LanguageDetectorRequest): Observable<LanguageDetector> {
+  protected createAndMonitorSession(
+    request: LanguageDetectorRequest
+  ): Observable<LanguageDetector> {
     const progress$ = new Subject<ProgressEvent>();
 
     const monitor = (event: EventTarget) => {

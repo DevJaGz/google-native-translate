@@ -14,7 +14,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import { LanguageDetectorRequest, TextTranslatorPort } from '@core/ports';
+import { TextTranslatorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
 import { AppError, ErrorType } from '@core/models';
@@ -29,7 +29,7 @@ export class BrowserTranslator
   protected currentSourceLanguageCode: string | null = null;
   protected currentTargetLanguageCode: string | null = null;
 
-  translate(request: LanguageDetectorRequest): Observable<string> {
+  translate(request: TextTranslatorRequest): Observable<string> {
     const hasSupport$ = this.hasLanguageSupport(request);
     const session$ = this.getSession(request);
     const translate$ = session$.pipe(
@@ -77,18 +77,18 @@ export class BrowserTranslator
     ).pipe(map((result) => result === 'available'));
   }
 
-  protected hasSameLanguages(request: LanguageDetectorRequest): boolean {
+  protected hasSameLanguages(request: TextTranslatorRequest): boolean {
     return (
       this.currentSourceLanguageCode === request.sourceLanguageCode &&
       this.currentTargetLanguageCode === request.targetLanguageCode
     );
   }
 
-  protected getSession(request: LanguageDetectorRequest): Observable<Translator> {
+  protected getSession(request: TextTranslatorRequest): Observable<Translator> {
     if (this.session && this.hasSameLanguages(request)) {
       return of(this.session);
     }
-
+    this.destroySession();
     return this.isAvailable(request).pipe(
       switchMap((isAvailable) =>
         isAvailable ? this.createSession(request) : this.createAndMonitorSession(request)
@@ -101,7 +101,7 @@ export class BrowserTranslator
     );
   }
 
-  protected createSession(request: LanguageDetectorRequest): Observable<Translator> {
+  protected createSession(request: TextTranslatorRequest): Observable<Translator> {
     return from(
       Translator.create({
         sourceLanguage: request.sourceLanguageCode,
@@ -111,7 +111,7 @@ export class BrowserTranslator
     );
   }
 
-  protected createAndMonitorSession(request: LanguageDetectorRequest): Observable<Translator> {
+  protected createAndMonitorSession(request: TextTranslatorRequest): Observable<Translator> {
     const progress$ = new Subject<ProgressEvent>();
 
     const monitor = (event: EventTarget) => {

@@ -18,7 +18,6 @@ export type LanguageDetectorResult = {
 export abstract class LanguageDetectorPort {
   abstract detect(request: LanguageDetectorRequest): Observable<LanguageDetectorResult[]>;
   abstract isSupported(): Observable<boolean>;
-  abstract destroy(): void;
 };
 export const provideLanguageDetector = (useExisting: Type<LanguageDetectorPort>): EnvironmentProviders => {
   return makeEnvironmentProviders([

@@ -5,13 +5,13 @@ export class BrowserTranslationApi<TApi extends API> {
   protected monitorEvent?: EventTarget;
   protected progressListener?: EventListener;
 
-  destroy() {
+  protected destroySession() {
     this.session?.destroy();
     this.session = undefined;
-    this.distroyProgressEvent();
+    this.destroyProgressEvent();
   }
 
-  protected distroyProgressEvent() {
+  protected destroyProgressEvent() {
     this.monitorEvent?.removeEventListener(
       'downloadprogress',
       this.progressListener!,
