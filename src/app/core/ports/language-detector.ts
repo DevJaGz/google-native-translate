@@ -1,4 +1,4 @@
-import { ExistingProvider, Type } from '@angular/core';
+import { EnvironmentProviders, makeEnvironmentProviders, Type } from '@angular/core';
 import { AbortOperationOption, MonitorProgressOption, SupportedLanguagesOption } from '@shared/models';
 import { Observable } from 'rxjs';
 
@@ -20,10 +20,11 @@ export abstract class LanguageDetectorPort {
   abstract isSupported(): Observable<boolean>;
   abstract destroy(): void;
 };
-
-export const provideLanguageDetector = (useExisting: Type<LanguageDetectorPort>): ExistingProvider => {
-  return {
-    provide: LanguageDetectorPort,
-    useExisting
-  }
-}
+export const provideLanguageDetector = (useExisting: Type<LanguageDetectorPort>): EnvironmentProviders => {
+  return makeEnvironmentProviders([
+    {
+      provide: LanguageDetectorPort,
+      useExisting,
+    },
+  ]);
+};

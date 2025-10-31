@@ -1,4 +1,4 @@
-import { Type, ExistingProvider } from '@angular/core';
+import { Type, EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import { AbortOperationOption, MonitorProgressOption, SupportLangauges } from '@shared/models';
 import { Observable } from 'rxjs';
 
@@ -13,9 +13,11 @@ export abstract class TextTranslatorPort {
   abstract isSupported(request: SupportLangauges): Observable<boolean>;
 };
 
-export const provideTextTranslator = (useExisting: Type<TextTranslatorPort>): ExistingProvider => {
-  return {
-    provide: TextTranslatorPort,
-    useExisting
-  }
-}
+export const provideTextTranslator = (useExisting: Type<TextTranslatorPort>): EnvironmentProviders => {
+  return makeEnvironmentProviders([
+    {
+      provide: TextTranslatorPort,
+      useExisting,
+    },
+  ]);
+};
