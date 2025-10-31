@@ -1,3 +1,3 @@
 export * from './languages';
 export * from './language-detector';
-export * from './translator';
+export * from './text-translator';

@@ -1,4 +1,3 @@
-import { DetectionEvent } from '@shared/models';
 import { Translation, TranslationContentType } from './translation';
 
 export type TranslateTextRequest = {
@@ -7,20 +6,6 @@ export type TranslateTextRequest = {
   text: string;
 };
 
-export type TranslateTextProgressContext = 'DETECTING' | 'TRANSLATING';
-
-export type TranslateTextProgress = {
-  type: 'progress';
-  action: TranslateTextProgressContext;
-  progress: number;
-};
-
-export type TranslateTextResult = {
-  type: 'translation';
-  result: TranslationText;
-};
-
-export type TranslateTextResponse = TranslateTextResult | TranslateTextProgress | DetectionEvent;
 
 export class TranslationText extends Translation {
   readonly contentType = TranslationContentType.TEXT;
