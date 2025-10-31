@@ -38,6 +38,9 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
   }
 
   protected detectLanguage(request: TranslateTextRequest): Observable<LanguageDetectorResult[]> {
+    if (request.text.trim().length < 20) {
+      return throwError(() => AppError.create({ type: ErrorType.LANGUAGE_DETECTION_MIN_QUOTA }));
+    }
     return this.#languages.listLanguageCodes().pipe(
       switchMap((supportedLanguageCodes) =>
         this.#languageDetector.detect({
