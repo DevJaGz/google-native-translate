@@ -1,4 +1,4 @@
-import { AbortOperationOption } from '@shared/models';
+import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
 import { Observable } from 'rxjs';
 
 
@@ -6,7 +6,7 @@ export type TextTranslatorRequest = {
   text: string;
   sourceLanguageCode: string;
   targetLanguageCode: string;
-  options?: Prettify<AbortOperationOption>;
+  options?: Prettify<AbortOperationOption & MonitorProgressOption>;
 }
 
 export abstract class TextTranslatorPort {

@@ -4,6 +4,6 @@ export type AbortOperationOption = {
 
 export type SupportedLanguagesOption = { supportedLanguageCodes?: string[] };
 
-export type MonitorOption<TParams = undefined> = {
+export type MonitorProgressOption<TParams = { progress: number }> = {
   monitor?: (params: TParams) => void;
 };

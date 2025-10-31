@@ -24,7 +24,7 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
         throwError(() =>
           error instanceof AppError
             ? error
-            :  AppError.create({ type: ErrorType.UNKNOWN, originalError: error })
+            : AppError.create({ type: ErrorType.UNKNOWN, originalError: error })
         )
       )
     );
@@ -33,7 +33,7 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
   protected handleSourceLanguageCode(request: TranslateTextRequest): Observable<string> {
     return request.sourceLanguageCode
       ? of(request.sourceLanguageCode)
-      : this.detectLanguage(request.text).pipe(
+      : this.detectLanguage(request).pipe(
           map((results) => {
             const [best] = results;
             if (!best || best.confidence < 0.5) {
@@ -44,13 +44,15 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
         );
   }
 
-  protected detectLanguage(text: string): Observable<LanguageDetectorResult[]> {
+  protected detectLanguage(request: TranslateTextRequest): Observable<LanguageDetectorResult[]> {
     return this.#languages.listLanguageCodes().pipe(
       switchMap((supportedLanguageCodes) =>
         this.#languageDetector.detect({
-          text,
+          text: request.text,
           options: {
             supportedLanguageCodes,
+            abortSignal: request.detection?.abortSignal,
+            monitor: request.detection?.monitor,
           },
         })
       )
@@ -66,6 +68,10 @@ export class TranslateTextUsecase implements Usecase<TranslateTextRequest, Trans
         text: request.text,
         targetLanguageCode: request.targetLanguageCode,
         sourceLanguageCode,
+        options: {
+          abortSignal: request.translation?.abortSignal,
+          monitor: request.translation?.monitor,
+        }
       })
       .pipe(
         map((translatedText) =>

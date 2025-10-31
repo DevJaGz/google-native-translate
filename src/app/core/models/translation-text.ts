@@ -1,15 +1,16 @@
-import { MonitorOption } from '@shared/models';
+import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
 import { Translation, TranslationContentType } from './translation';
 
-
-export type TranslateTextEvent = {}
-
-export type TranslateTextRequest = Prettify<{
-  sourceLanguageCode: string;
-  targetLanguageCode: string;
-  text: string;
-} & MonitorOption<TranslateTextEvent>>;
-
+export type TranslateTextRequest = Prettify<
+  {
+    sourceLanguageCode: string;
+    targetLanguageCode: string;
+    text: string;
+  } & {
+    detection?: Prettify<AbortOperationOption & MonitorProgressOption>;
+    translation?: Prettify<AbortOperationOption & MonitorProgressOption>;
+  }
+>;
 
 export class TranslationText extends Translation {
   readonly contentType = TranslationContentType.TEXT;
