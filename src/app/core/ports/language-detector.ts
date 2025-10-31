@@ -1,10 +1,10 @@
-import { LanguageRequestOptions } from '@shared/models';
+import { AbortOperationOption, SupportedLanguagesOption } from '@shared/models';
 import { Observable } from 'rxjs';
 
 
 export type LanguageDetectorRequest = {
   text: string;
-  options?: LanguageRequestOptions & { supportedLanguageCodes?: string[] };
+  options?: Prettify<AbortOperationOption & SupportedLanguagesOption>;
 }
 
 export type LanguageDetectorResult = {

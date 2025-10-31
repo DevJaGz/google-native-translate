@@ -1,10 +1,14 @@
+import { MonitorOption } from '@shared/models';
 import { Translation, TranslationContentType } from './translation';
 
-export type TranslateTextRequest = {
+
+export type TranslateTextEvent = {}
+
+export type TranslateTextRequest = Prettify<{
   sourceLanguageCode: string;
   targetLanguageCode: string;
   text: string;
-};
+} & MonitorOption<TranslateTextEvent>>;
 
 
 export class TranslationText extends Translation {
@@ -35,5 +39,3 @@ export class TranslationText extends Translation {
     return new TranslationText(sourceText, targetText, sourceLanguageCode, targetLanguageCode);
   }
 }
-
-export type TranslationTexts = TranslationText[];
