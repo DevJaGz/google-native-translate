@@ -3,11 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltip } from '@angular/material/tooltip';
 
-import { provideLanguages } from '@core/ports';
+import { provideLanguageDetector, provideLanguages } from '@core/ports';
 import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
 import { InMemoryLanguagesRepository } from '@data/repositories';
-
+import { BrowserLanguageDetector } from '@data/services';
 
 @Component({
   selector: 'app-root',
@@ -53,7 +53,10 @@ import { InMemoryLanguagesRepository } from '@data/repositories';
     </mat-drawer-container>
   `,
   styles: [],
-  providers: [provideLanguages(InMemoryLanguagesRepository)],
+  providers: [
+    provideLanguages(InMemoryLanguagesRepository),
+    provideLanguageDetector(BrowserLanguageDetector),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {

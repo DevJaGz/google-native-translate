@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 export type LanguageDetectorRequest = {
   text: string;
+  sourceLanguageCode: string;
+  targetLanguageCode: string;
   options?: Prettify<AbortOperationOption & SupportedLanguagesOption & MonitorProgressOption>;
 }
 
@@ -16,6 +18,7 @@ export type LanguageDetectorResult = {
 export abstract class LanguageDetectorPort {
   abstract detect(request: LanguageDetectorRequest): Observable<LanguageDetectorResult[]>;
   abstract isSupported(): Observable<boolean>;
+  abstract destroy(): void;
 };
 
 export const provideLanguageDetector = (useExisting: Type<LanguageDetectorPort>): ExistingProvider => {

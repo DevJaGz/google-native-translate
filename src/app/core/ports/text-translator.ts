@@ -1,18 +1,16 @@
 import { Type, ExistingProvider } from '@angular/core';
-import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
+import { AbortOperationOption, MonitorProgressOption, SupportLangauges } from '@shared/models';
 import { Observable } from 'rxjs';
 
 
 export type TextTranslatorRequest = {
   text: string;
-  sourceLanguageCode: string;
-  targetLanguageCode: string;
   options?: Prettify<AbortOperationOption & MonitorProgressOption>;
-}
+} & Prettify<SupportLangauges>;
 
 export abstract class TextTranslatorPort {
   abstract translate(request: TextTranslatorRequest): Observable<string>;
-  abstract isSupported(): Observable<boolean>;
+  abstract isSupported(request: SupportLangauges): Observable<boolean>;
 };
 
 export const provideTextTranslator = (useExisting: Type<TextTranslatorPort>): ExistingProvider => {
