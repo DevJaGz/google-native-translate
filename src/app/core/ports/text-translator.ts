@@ -10,7 +10,7 @@ export type TextTranslatorRequest = {
 
 export abstract class TextTranslatorPort {
   abstract translate(request: TextTranslatorRequest): Observable<string>;
-  abstract isSupported(request: SupportLangauges): Observable<boolean>;
+  abstract hasBrowserSupport(request: SupportLangauges): Observable<boolean>;
 };
 
 export const provideTextTranslator = (useExisting: Type<TextTranslatorPort>): EnvironmentProviders => {

@@ -1,14 +1,16 @@
 import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
 import { Translation, TranslationContentType } from './translation';
 
+export type TranslateTextRequestOptions = Prettify<AbortOperationOption & MonitorProgressOption>;
+
 export type TranslateTextRequest = Prettify<
   {
     sourceLanguageCode: string;
     targetLanguageCode: string;
     text: string;
   } & {
-    detection?: Prettify<AbortOperationOption & MonitorProgressOption>;
-    translation?: Prettify<AbortOperationOption & MonitorProgressOption>;
+    detection?: TranslateTextRequestOptions;
+    translation?: TranslateTextRequestOptions;
   }
 >;
 

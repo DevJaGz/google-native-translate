@@ -1,131 +1,90 @@
 import { Injectable } from '@angular/core';
 import {
-  combineLatest,
-  filter,
-  finalize,
   from,
   map,
   Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
+  of, switchMap
 } from 'rxjs';
-import { LanguageDetectorPort, LanguageDetectorRequest, LanguageDetectorResult } from '@core/ports';
+import {
+  LanguageDetectorPort,
+  LanguageDetectorRequest,
+  LanguageDetectorResult,
+} from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
+import { AppError, ErrorType } from '@core/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BrowserLanguageDetector
-  extends BrowserTranslationApi<LanguageDetector>
+  extends BrowserTranslationApi<LanguageDetector, LanguageDetectorRequest>
   implements LanguageDetectorPort
 {
   protected supportedLanguageCodesSignature: string | null = null;
 
-  detect(request: LanguageDetectorRequest): Observable<LanguageDetectorResult[]> {
-    const session$ = this.getSession(request);
-    return session$.pipe(
+  detect(
+    request: LanguageDetectorRequest,
+  ): Observable<LanguageDetectorResult[]> {
+    return this.getSession(request).pipe(
       switchMap((session) =>
-        from(session.detect(request.text, { signal: request.options?.abortSignal }))
+        from(
+          session.detect(request.text, {
+            signal: request.options?.abortSignal,
+          }),
+        ),
       ),
       map((result) =>
         result.map(
           ({ confidence, detectedLanguage }): LanguageDetectorResult => ({
             languageCode: detectedLanguage,
             confidence,
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 
-  isSupported(): Observable<boolean> {
-    if (!('LanguageDetector' in self)) {
-      return of(false);
-    }
-    return from(LanguageDetector.availability()).pipe(map((result) => result !== 'unavailable'));
+  hasBrowserSupport(): Observable<boolean> {
+    return of('LanguageDetector' in self);
   }
 
   protected isAvailable(): Observable<boolean> {
-    return from(LanguageDetector.availability()).pipe(map((result) => result === 'available'));
-  }
-
-  protected hasSameSupportedLanguages(request: LanguageDetectorRequest): boolean {
-    const languages = request.options?.supportedLanguageCodes;
-    if (!languages) {
-      return true;
-    }
-
-    const signature = languages.join('|'); // 'en|fr|de'
-    const isSame = this.supportedLanguageCodesSignature === signature;
-    this.supportedLanguageCodesSignature = signature;
-    return isSame;
-  }
-
-  protected getSession(request: LanguageDetectorRequest): Observable<LanguageDetector> {
-    if (this.session && this.hasSameSupportedLanguages(request)) {
-      return of(this.session);
-    }
-
-    this.destroySession();
-
-    return this.isAvailable().pipe(
-      switchMap((isAvailable) =>
-        isAvailable ? this.createSession(request) : this.createAndMonitorSession(request)
-      ),
-      tap({
-        next: (session) => {
-          this.session = session;
-        },
-      })
+    return from(LanguageDetector.availability()).pipe(
+      map((result) => result === 'available'),
     );
   }
 
-  protected createSession(request: LanguageDetectorRequest): Observable<LanguageDetector> {
+  protected createSession(
+    request: LanguageDetectorRequest,
+  ): Observable<LanguageDetector> {
     return from(
       LanguageDetector.create({
         signal: request.options?.abortSignal,
         expectedInputLanguages: request.options?.supportedLanguageCodes,
-      })
+      }),
     );
   }
 
-  protected createAndMonitorSession(
-    request: LanguageDetectorRequest
-  ): Observable<LanguageDetector> {
-    const progress$ = new Subject<ProgressEvent>();
+  protected isSessionValid(request: LanguageDetectorRequest): boolean {
+    const languages = request.options?.supportedLanguageCodes;
+    if (!languages) {
+      return true;
+    }
+    const signature = languages.join('|'); // 'en|fr|de'
+    const hasSameSignature = this.supportedLanguageCodesSignature === signature;
+    this.supportedLanguageCodesSignature = signature;
+    return hasSameSignature;
+  }
 
-    const monitor = (event: EventTarget) => {
-      this.progressListener = (result: Event) => {
-        progress$.next(result as ProgressEvent);
-      };
-      event.addEventListener('downloadprogress', this.progressListener);
-    };
-
-    const session$ = from(
-      LanguageDetector.create({
-        expectedInputLanguages: request.options?.supportedLanguageCodes,
-        signal: request.options?.abortSignal,
-        monitor,
-      })
+  protected isOperationSupported(): Observable<boolean> {
+    return from(LanguageDetector.availability()).pipe(
+      map((result) => result !== 'unavailable'),
     );
+  }
 
-    const ready$ = progress$.pipe(
-      tap({
-        next: (progress) => {
-          const monitorFn = request.options?.monitor;
-          if (monitorFn) {
-            monitorFn(progress);
-          }
-        },
-      }),
-      filter((progress) => progress.loaded === progress.total)
-    );
-
-    return combineLatest([session$, ready$]).pipe(
-      map(([session]) => session),
-      finalize(() => progress$.complete())
-    );
+  protected operationNotSupportedError(): AppError {
+    return AppError.create({
+      type: ErrorType.LANGUAGE_DETECTION_NOT_SUPPORTED,
+    });
   }
 }

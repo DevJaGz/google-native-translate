@@ -13,8 +13,8 @@ export class CheckSupportUsecase implements Usecase<SupportLangauges, boolean> {
 
   execute(request: SupportLangauges): Observable<boolean> {
     return forkJoin([
-      this.#languageDetector.isSupported(),
-      this.#textTranslator.isSupported(request),
+      this.#languageDetector.hasBrowserSupport(),
+      this.#textTranslator.hasBrowserSupport(request),
     ]).pipe(
       map(([langSupported, textSupported]) => {
         if (!langSupported) {
