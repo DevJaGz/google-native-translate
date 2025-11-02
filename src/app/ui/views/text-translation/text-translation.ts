@@ -80,6 +80,7 @@ export class TextTranslation {
           },
         },
         translation: {
+          stream: true,
           monitor: (progress) => {
             console.log(`Translation loaded:`, progress.loaded, ', out of:', progress.total);
           },
@@ -87,7 +88,7 @@ export class TextTranslation {
       })
       .subscribe({
         next: (translatedText) => {
-          alert(`Translated Text: ${JSON.stringify(translatedText)}`);
+          console.log(`Translated Text: ${JSON.stringify(translatedText, null, 2)}`);
         },
         error: (err) => {
           console.error(err);

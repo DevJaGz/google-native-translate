@@ -2,10 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import {
   AppError,
   ErrorType,
-  TranslateTextRequest,
-  TranslationStatus,
-  TranslationText,
-  Usecase,
+  TranslateTextRequest, TranslationText,
+  Usecase
 } from '@core/models';
 import {
   LanguageDetectorPort,
@@ -85,18 +83,18 @@ export class TranslateTextUsecase
         options: {
           abortSignal: request.translation?.abortSignal,
           monitor: request.translation?.monitor,
+          stream: request.translation?.stream,
         },
       })
       .pipe(
-        map((translatedText) =>
-          TranslationText.create(
+        map((translatedText) => {
+          return TranslationText.create(
             request.text,
             translatedText,
             sourceLanguageCode,
             request.targetLanguageCode,
-            TranslationStatus.COMPLETED
-          ),
-        ),
+          );
+        })
       );
   }
 }

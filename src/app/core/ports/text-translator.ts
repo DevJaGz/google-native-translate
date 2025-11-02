@@ -1,11 +1,11 @@
 import { Type, EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { AbortOperationOption, MonitorProgressOption, SupportLangauges } from '@shared/models';
+import { AbortOperationOption, MonitorProgressOption, StreamedOption, SupportLangauges } from '@shared/models';
 import { Observable } from 'rxjs';
 
 
 export type TextTranslatorRequest = {
   text: string;
-  options?: Prettify<AbortOperationOption & MonitorProgressOption>;
+  options?: Prettify<AbortOperationOption & MonitorProgressOption & StreamedOption>;
 } & Prettify<SupportLangauges>;
 
 export abstract class TextTranslatorPort {

@@ -1,16 +1,10 @@
-import { Injectable } from '@angular/core';
-import {
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { from, map, Observable, of, scan, switchMap, tap } from 'rxjs';
 import { TextTranslatorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
 import { AppError, ErrorType } from '@core/models';
+import { ReadableStreamHelper } from '@shared/helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -19,10 +13,22 @@ export class BrowserTranslator
   extends BrowserTranslationApi<Translator, TextTranslatorRequest>
   implements TextTranslatorPort
 {
+  readonly #readableStreamHelper = inject(ReadableStreamHelper);
   protected currentSourceLanguageCode: string | null = null;
   protected currentTargetLanguageCode: string | null = null;
 
+
   translate(request: TextTranslatorRequest): Observable<string> {
+    return request.options?.stream
+      ? this.translateTextStreaming(request)
+      : this.translateText(request);
+  }
+
+  hasBrowserSupport(): Observable<boolean> {
+    return of('Translator' in self);
+  }
+
+  protected translateText(request: TextTranslatorRequest): Observable<string> {
     return this.getSession(request).pipe(
       switchMap((session) =>
         from(
@@ -40,8 +46,26 @@ export class BrowserTranslator
     );
   }
 
-  hasBrowserSupport(): Observable<boolean> {
-    return of('Translator' in self);
+  protected translateTextStreaming(
+    request: TextTranslatorRequest,
+  ): Observable<string> {
+    return this.getSession(request).pipe(
+      switchMap((session) =>
+        from(
+          session.translateStreaming(request.text, {
+            signal: request.options?.abortSignal,
+          }),
+        ),
+      ),
+      tap({
+        next: () => {
+          this.currentSourceLanguageCode = request.sourceLanguageCode;
+          this.currentTargetLanguageCode = request.targetLanguageCode;
+        },
+      }),
+      switchMap((stream) => this.#readableStreamHelper.toObservable(stream)),
+      scan((acc, current) => acc + current,'')
+    );
   }
 
   protected isAvailable(request: SupportLangauges): Observable<boolean> {

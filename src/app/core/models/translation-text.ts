@@ -1,4 +1,4 @@
-import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
+import { AbortOperationOption, MonitorProgressOption, StreamedOption } from '@shared/models';
 import {
   Translation,
   TranslationContentType,
@@ -15,8 +15,8 @@ export type TranslateTextRequest = Prettify<
     targetLanguageCode: string;
     text: string;
   } & {
-    detection?: TranslateTextRequestOptions;
-    translation?: TranslateTextRequestOptions;
+    detection?: TranslateTextRequestOptions ;
+    translation?: Prettify<TranslateTextRequestOptions & StreamedOption>;
   }
 >;
 
