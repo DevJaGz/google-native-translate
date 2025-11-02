@@ -1,7 +1,13 @@
 import { AbortOperationOption, MonitorProgressOption } from '@shared/models';
-import { Translation, TranslationContentType } from './translation';
+import {
+  Translation,
+  TranslationContentType,
+  TranslationStatus,
+} from './translation';
 
-export type TranslateTextRequestOptions = Prettify<AbortOperationOption & MonitorProgressOption>;
+export type TranslateTextRequestOptions = Prettify<
+  AbortOperationOption & MonitorProgressOption
+>;
 
 export type TranslateTextRequest = Prettify<
   {
@@ -19,10 +25,11 @@ export class TranslationText extends Translation {
   constructor(
     private sourceText: string,
     private targetText: string,
+    status: TranslationStatus,
     sourceLanguageCode: string,
-    targetLanguageCode: string
+    targetLanguageCode: string,
   ) {
-    super(sourceLanguageCode, targetLanguageCode);
+    super(sourceLanguageCode, targetLanguageCode, status);
   }
 
   sourceContent(): string {
@@ -37,8 +44,15 @@ export class TranslationText extends Translation {
     sourceText: string,
     targetText: string,
     sourceLanguageCode: string,
-    targetLanguageCode: string
+    targetLanguageCode: string,
+    status = TranslationStatus.PENDING,
   ): TranslationText {
-    return new TranslationText(sourceText, targetText, sourceLanguageCode, targetLanguageCode);
+    return new TranslationText(
+      sourceText,
+      targetText,
+      status,
+      sourceLanguageCode,
+      targetLanguageCode,
+    );
   }
 }

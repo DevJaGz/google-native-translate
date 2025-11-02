@@ -14,13 +14,21 @@ export abstract class Translation {
   constructor(
     readonly sourceLanguageCode: string,
     readonly targetLanguageCode: string,
+    private _status = TranslationStatus.PENDING,
     protected createdAt = new Date(),
-    protected status = TranslationStatus.PENDING
   ) {}
 
   readonly abstract contentType: TranslationContentType;
   abstract sourceContent(): unknown;
   abstract translatedContent(): unknown;
+
+  get status() {
+    return this._status;
+  }
+
+  setStatus(status: TranslationStatus) {
+    this._status = status;
+  }
 }
 
 export type Translations = Translation[];
