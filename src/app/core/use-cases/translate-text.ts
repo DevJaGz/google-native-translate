@@ -13,7 +13,7 @@ import {
   LanguagesPort,
   TextTranslatorPort,
 } from '@core/ports';
-import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
