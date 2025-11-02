@@ -138,6 +138,13 @@ export abstract class BrowserTranslationApi<
     );
   }
 
+
+  /**
+   * Create and monitor a new API session.
+   * 
+   * @param request - Parameters required by the API.
+   * @returns - Session created.
+   */
   private createAndMonitorSession(request: TRequest): Observable<TApiSession> {
     const progress$ = new Subject<ProgressEvent>();
 
