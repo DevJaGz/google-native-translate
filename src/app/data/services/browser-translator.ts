@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { from, map, Observable, of, scan, switchMap, tap } from 'rxjs';
+import { from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { TextTranslatorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
@@ -64,7 +64,6 @@ export class BrowserTranslator
         },
       }),
       switchMap((stream) => this.#readableStreamHelper.toObservable(stream)),
-      scan((acc, current) => acc + current,'')
     );
   }
 

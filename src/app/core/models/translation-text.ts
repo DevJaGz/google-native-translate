@@ -2,7 +2,6 @@ import { AbortOperationOption, MonitorProgressOption, StreamedOption } from '@sh
 import {
   Translation,
   TranslationContentType,
-  TranslationStatus,
 } from './translation';
 
 export type TranslateTextRequestOptions = Prettify<
@@ -25,11 +24,10 @@ export class TranslationText extends Translation {
   constructor(
     private sourceText: string,
     private targetText: string,
-    status: TranslationStatus,
     sourceLanguageCode: string,
     targetLanguageCode: string,
   ) {
-    super(sourceLanguageCode, targetLanguageCode, status);
+    super(sourceLanguageCode, targetLanguageCode);
   }
 
   sourceContent(): string {
@@ -45,12 +43,10 @@ export class TranslationText extends Translation {
     targetText: string,
     sourceLanguageCode: string,
     targetLanguageCode: string,
-    status = TranslationStatus.PENDING,
   ): TranslationText {
     return new TranslationText(
       sourceText,
       targetText,
-      status,
       sourceLanguageCode,
       targetLanguageCode,
     );

@@ -11,7 +11,7 @@ import {
   LanguagesPort,
   TextTranslatorPort,
 } from '@core/ports';
-import { map, Observable, of, switchMap, throwError } from 'rxjs';
+import { map, Observable, of, scan, switchMap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -87,6 +87,7 @@ export class TranslateTextUsecase
         },
       })
       .pipe(
+        scan((acc, current) => acc + current,''),
         map((translatedText) => {
           return TranslationText.create(
             request.text,
