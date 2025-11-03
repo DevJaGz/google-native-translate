@@ -33,7 +33,7 @@ import { Store } from '@ui/store';
         <app-header />
         <main class="max-w-7xl mx-auto px-4 sm:px-0">
           <app-operation-mode class="mt-3 sm:mt-4" />
-          <app-language-selectors class="mt-4 mb-2" />
+          <app-language-selectors class="mt-4" />
           <router-outlet />
           <div class="flex justify-end">
             <a

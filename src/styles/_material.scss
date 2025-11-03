@@ -33,6 +33,13 @@ html {
       container-width: 280px,
     )
   );
+  @include mat.tabs-overrides(
+    (
+      active-indicator-color: var(--google-sky-blue),
+      active-label-text-color: var(--google-sky-blue),
+      inactive-label-text-color: var(--text-primary),
+    )
+  );
 }
 
 .mat-tab-button {
