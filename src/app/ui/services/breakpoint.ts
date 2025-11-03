@@ -6,7 +6,7 @@ export type ViewportType = 'web' | 'tablet' | 'handset'
 @Injectable({
     providedIn: 'root'
 })
-export class BreakpointsService {
+export class BreakpointService {
     readonly #breakpointObserver = inject(BreakpointObserver);
     protected readonly _isHandset = signal<boolean>(false);
     protected readonly _isTablet = signal<boolean>(false);
