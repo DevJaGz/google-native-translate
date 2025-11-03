@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +36,7 @@ export class LanguageSelector {
   readonly languageCodeSelected = input<string>('');
   readonly handset = input<boolean>(false);
   readonly #dialog = inject(MatDialog);
+  readonly languageSelected = output<Language>();
 
   readonly languageNameSelected = computed(
     () =>
@@ -47,8 +49,10 @@ export class LanguageSelector {
     this.openModal()
       .pipe(
         tap({
-          next: (selectedLanguage) => {
-            console.log(selectedLanguage);
+          next: (result) => {
+            if (result?.languageSelected) {
+              this.languageSelected.emit(result.languageSelected);
+            }
           },
         }),
       )

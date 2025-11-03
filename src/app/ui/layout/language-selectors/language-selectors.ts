@@ -5,6 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { Language } from '@core/models';
 import { ListLanguagesUsecase } from '@core/use-cases';
 import { IconButton, LanguageSelector } from '@ui/components';
 import { BreakpointService } from '@ui/services';
@@ -20,6 +21,9 @@ import { Store } from '@ui/store';
         [list]="sourceLanguageList()"
         [languageCodeSelected]="
           store.languageSelectors.sourceLanguageCodeSelected()
+        "
+        (languageSelected)="
+          store.languageSelectors.setSourceLanguageCodeSelected($event.code)
         " />
       <app-icon-button>swap_horiz</app-icon-button>
       <app-language-selector
@@ -27,6 +31,9 @@ import { Store } from '@ui/store';
         [list]="targetLanguageList()"
         [languageCodeSelected]="
           store.languageSelectors.targetLanguageCodeSelected()
+        "
+        (languageSelected)="
+          store.languageSelectors.setTargetLanguageCodeSelected($event.code)
         " />
     </div>
   `,
@@ -50,9 +57,12 @@ export class LanguageSelectors {
     const allLanguages = this.languageList.value();
     const targetLanguageCode =
       this.store.languageSelectors.targetLanguageCodeSelected();
-    return allLanguages.filter(
-      (language) => language.code !== targetLanguageCode,
-    );
+    return [
+      Language.create({ code: 'und', name: 'Auto detect' }),
+      ...allLanguages.filter(
+        (language) => language.code !== targetLanguageCode,
+      ),
+    ];
   });
 
   readonly targetLanguageList = computed(() => {
