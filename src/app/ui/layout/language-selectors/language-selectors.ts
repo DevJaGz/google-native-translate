@@ -22,11 +22,12 @@ import { Store } from '@ui/store';
         [languageCodeSelected]="
           store.languageSelectors.sourceLanguageCodeSelected()
         "
-        [autoDetectLabel]="'Chinese (Simplified)'"
         (languageSelected)="
           store.languageSelectors.setSourceLanguageCodeSelected($event.code)
         " />
-      <app-icon-button [isDisabled]="isSwapLanguagesDisabled()">swap_horiz</app-icon-button>
+      <app-icon-button [isDisabled]="isSwapLanguagesDisabled()"
+        >swap_horiz</app-icon-button
+      >
       <app-language-selector
         [handset]="breakpointService.isHandset()"
         [list]="targetLanguageList()"
@@ -54,11 +55,9 @@ export class LanguageSelectors {
     defaultValue: [],
   });
 
-  readonly isSwapLanguagesDisabled = computed(() => {
-    const sourceLanguageCode =
-      this.store.languageSelectors.sourceLanguageCodeSelected();
-    return sourceLanguageCode === 'und';
-  });
+  readonly isSwapLanguagesDisabled = computed(
+    () => this.store.languageSelectors.sourceLanguageCodeSelected() === 'und',
+  );
 
   readonly sourceLanguageList = computed(() => {
     const allLanguages = this.languageList.value();
