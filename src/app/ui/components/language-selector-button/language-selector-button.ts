@@ -6,7 +6,7 @@ import { LanguageSelectorModal } from './language-selector-modal';
 @Component({
   selector: 'app-language-selector-button',
   imports: [MatButtonModule],
-  template: ` <button matButton (click)="openDialog()" (keydown.enter)="openDialog()">Basic</button> `,
+  template: ` <button matButton (click)="openDialog()" (keydown.enter)="openDialog()" ><span class="tracking-[0.25px] font-medium text-base text-google-sky-blue">Basic</span></button> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
