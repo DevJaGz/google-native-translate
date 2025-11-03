@@ -26,7 +26,7 @@ import { Store } from '@ui/store';
         (languageSelected)="
           store.languageSelectors.setSourceLanguageCodeSelected($event.code)
         " />
-      <app-icon-button>swap_horiz</app-icon-button>
+      <app-icon-button [isDisabled]="isSwapLanguagesDisabled()">swap_horiz</app-icon-button>
       <app-language-selector
         [handset]="breakpointService.isHandset()"
         [list]="targetLanguageList()"
@@ -52,6 +52,12 @@ export class LanguageSelectors {
   readonly languageList = rxResource({
     stream: () => this.#listLanguages.execute(),
     defaultValue: [],
+  });
+
+  readonly isSwapLanguagesDisabled = computed(() => {
+    const sourceLanguageCode =
+      this.store.languageSelectors.sourceLanguageCodeSelected();
+    return sourceLanguageCode === 'und';
   });
 
   readonly sourceLanguageList = computed(() => {
