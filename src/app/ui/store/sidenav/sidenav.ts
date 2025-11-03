@@ -9,8 +9,8 @@ export const initialSidenavState: SidenavState = {
   isOpen: false,
 };
 
-export const INITIAL_SIDENAV_STATE_FEATURE = new InjectionToken<SidenavState>(
-  'Initial Sidenav State Feature',
+export const INITIAL_SIDENAV_STATE = new InjectionToken<SidenavState>(
+  'Initial Sidenav State',
   {
     providedIn: 'root',
     factory: () => initialSidenavState,
@@ -19,7 +19,7 @@ export const INITIAL_SIDENAV_STATE_FEATURE = new InjectionToken<SidenavState>(
 
 export const SidenavStore = signalStore(
   { providedIn: 'root' },
-  withState<SidenavState>(() => inject(INITIAL_SIDENAV_STATE_FEATURE)),
+  withState<SidenavState>(() => inject(INITIAL_SIDENAV_STATE)),
   withMethods((store) => ({
     toggle() {
       patchState(store, {

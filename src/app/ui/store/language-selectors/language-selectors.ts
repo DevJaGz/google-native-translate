@@ -12,9 +12,9 @@ export const initialLanguageSelectorsState: LanguageSelectorsState = {
   targetLanguageCodeSelected: 'en',
 };
 
-export const LANGUAGE_SELECTORS_STATE_FEATURE =
+export const LANGUAGE_SELECTORS_STATE =
   new InjectionToken<LanguageSelectorsState>(
-    'Language Selectors State Feature',
+    'Language Selectors State',
     {
       providedIn: 'root',
       factory: () => initialLanguageSelectorsState,
@@ -24,7 +24,7 @@ export const LANGUAGE_SELECTORS_STATE_FEATURE =
 export const LanguageSelectorsStore = signalStore(
   { providedIn: 'root' },
   withState<LanguageSelectorsState>(() =>
-    inject(LANGUAGE_SELECTORS_STATE_FEATURE),
+    inject(LANGUAGE_SELECTORS_STATE),
   ),
   withMethods((store) => ({
     setSourceLanguageCodeSelected(sourceLanguageCodeSelected: string) {
