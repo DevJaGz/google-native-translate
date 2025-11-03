@@ -2,7 +2,9 @@
 
 @theme {
   --color-border-shadow: var(--shadow-1);
-  --font-family-base: var(--google-base-font);
+  --font-family-base: var(--base-font);
+  --font-google-product: var(--google-product-font);
+  --font-google-base: var(--google-base-font);
   --color-surface-primary: var(--surface-primary);
   --color-primary: var(--text-primary);
   --color-secondary: var(--text-secondary);
