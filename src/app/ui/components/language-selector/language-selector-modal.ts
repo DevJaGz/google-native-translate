@@ -7,11 +7,14 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { Language } from '@core/models';
 
 export type LanguageSelectorModalData = {
   languages: Language[];
   languageCodeSelected?: string;
+  autoDetectCode?: string;
+  autoDetectLabel?: string;
 };
 
 export type LanguageSelectorModalResult =
@@ -22,30 +25,51 @@ export type LanguageSelectorModalResult =
 
 @Component({
   selector: 'app-language-selector-modal',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatIconModule],
   template: `
     <div class="px-6 py-4">
       <p class="text-lg font-medium mb-4 text-secondary">Select Language</p>
       <div class="overflow-auto max-h-[80vh]">
         <div
-          class="grid grid-cols-[repeat(auto-fill,minmax(min(100px,100%),1fr))] gap-4 my-2">
+          class="grid grid-cols-[repeat(auto-fill,minmax(min(170px,100%),1fr))] gap-4 my-2">
           @for (language of data.languages; track $index) {
             <button
               matButton
-              class="p-2 hover:bg-surface-secondary! rounded-md! cursor-pointer!"
+              class="py-6! hover:bg-surface-secondary! rounded-md! cursor-pointer!"
               [attr.data-selected]="
                 language.code === data.languageCodeSelected ? '' : null
               "
               (click)="handleLanguageSelect(language)"
               (keydown.enter)="handleLanguageSelect(language)">
-              <span
+              <div
+                class="flex items-center gap-1"
                 [class]="
                   language.code === data.languageCodeSelected
                     ? 'text-google-sky-blue'
                     : 'text-primary'
                 ">
-                {{ language.name }}
-              </span>
+                @if (language.code === data.languageCodeSelected) {
+                  <mat-icon class="w-fit! grid!">
+                    <span class="material-symbols-outlined "> Check </span>
+                  </mat-icon>
+                }
+                <div class="flex items-center gap-1">
+                  <span class="line-clamp-2">
+                    {{ language.name }}
+                    @if (
+                      language.code === data.languageCodeSelected &&
+                      data.autoDetectLabel
+                    ) {
+                      ({{ data.autoDetectLabel }})
+                    }
+                  </span>
+                  @if (language.code === data.autoDetectCode) {
+                    <mat-icon class="w-fit! grid!">
+                      <span class="material-symbols-outlined "> stars_2 </span>
+                    </mat-icon>
+                  }
+                </div>
+              </div>
             </button>
           }
         </div>

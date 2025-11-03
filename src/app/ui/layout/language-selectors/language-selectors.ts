@@ -22,6 +22,7 @@ import { Store } from '@ui/store';
         [languageCodeSelected]="
           store.languageSelectors.sourceLanguageCodeSelected()
         "
+        [autoDetectLabel]="'Chinese (Simplified)'"
         (languageSelected)="
           store.languageSelectors.setSourceLanguageCodeSelected($event.code)
         " />
