@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CheckSupportUsecase, ListLanguagesUsecase, TranslateTextUsecase } from '@core/use-cases';
+import { CheckSupportUsecase, TranslateTextUsecase } from '@core/use-cases';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,6 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextTranslation {
-  readonly #listLanguages = inject(ListLanguagesUsecase);
   readonly #translateText = inject(TranslateTextUsecase);
   readonly #checkSupport = inject(CheckSupportUsecase);
 }
