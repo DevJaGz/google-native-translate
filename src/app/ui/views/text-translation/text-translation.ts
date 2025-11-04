@@ -40,7 +40,7 @@ type MonitorProgressEvent = {
         <textarea
           matInput
           [formControl]="sourceTextControl"
-          (keydown)="debounceTranslateText()"
+          (input)="debounceTranslateText()"
           rows="8"
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>

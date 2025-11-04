@@ -26,7 +26,10 @@ export class TranslateTextUsecase
   execute(request: TranslateTextRequest): Observable<TranslationText> {
     return this.getSourceLanguageCode(request).pipe(
       switchMap((sourceLanguageCode) =>
-        this.translateText(request, sourceLanguageCode),
+        this.translateText({
+          ...request,
+          text: request.text.trim(),
+        }, sourceLanguageCode),
       ),
     );
   }
