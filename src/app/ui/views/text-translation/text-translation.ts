@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateTextUsecase } from '@core/use-cases';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
-import { TimingHelper } from '@shared/helpers';
+import { LocalXHelper, TimingHelper } from '@shared/helpers';
 import { Subject, takeUntil, tap } from 'rxjs';
 import {
   MatSnackBar,
@@ -29,7 +34,6 @@ type MonitorProgressEvent = {
   ],
   template: `
     <form>
-      {{ translateStore.isLoading() ? 'Translating...' : '' }}
       <mat-form-field class="w-full max-w-xl min-h-48">
         <mat-label>Leave a comment</mat-label>
         <textarea
@@ -47,6 +51,7 @@ type MonitorProgressEvent = {
 export class TextTranslation {
   readonly #translateText = inject(TranslateTextUsecase);
   readonly #timingHelper = inject(TimingHelper);
+  readonly #localXHelper = inject(LocalXHelper);
   readonly #snackBar = inject(MatSnackBar);
   protected readonly store = inject(Store);
   protected readonly translateStore = this.store.translation;
@@ -61,6 +66,17 @@ export class TextTranslation {
   ]);
 
   protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
+
+  constructor() {
+    effect(() => {
+      const { isLoading } = this.translateStore;
+      if (isLoading()) {
+        this.sourceTextControl.disable();
+      } else {
+        this.sourceTextControl.enable();
+      }
+    });
+  }
 
   protected debounceTranslateText() {
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
@@ -134,13 +150,22 @@ export class TextTranslation {
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {
+
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+      this.languageSelectorsStore;
+
+    const sourceLanguageCode = sourceLanguageCodeSelected();
+    const targetLanguageCode = targetLanguageCodeSelected();
+
     const contextLabel =
       event.type === 'detector' ? 'Detecting language' : 'Translating text';
     const progressMessage = `A model is being downloaded for ${
       contextLabel
     } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
 
-    const doneMessage = `A ${contextLabel} model has been downloaded successfully.`;
+    const sourceLanguageName = this.#localXHelper.languageNameIn('en').of(sourceLanguageCode);
+    const targetLanguageName = this.#localXHelper.languageNameIn('en').of(targetLanguageCode);
+    const doneMessage = `A ${contextLabel} model for "${sourceLanguageName}" to "${targetLanguageName}" has been downloaded successfully.`;
     const message =
       event.loaded === event.total ? doneMessage : progressMessage;
     this.displayMessageToUser(message);
