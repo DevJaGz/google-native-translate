@@ -47,7 +47,17 @@ type MonitorProgressEvent = {
           rows="8"
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>
-      <output>{{ translationStore.translatedText() }}</output>
+      <output class="text-2xl p-2 outline outline-primary block rounded">
+        @if (translationStore.isLoading()) {
+          Translating...
+        } 
+        @else if (translationStore.translatedText() === '') {
+          Translation
+        }
+        @else {
+          {{ translationStore.translatedText() }}
+        }
+      </output>
     </form>
   `,
   styles: ``,
@@ -66,7 +76,7 @@ export class TextTranslation {
   protected readonly languageSelectorsStore = this.#store.languageSelectors;
 
   protected readonly translationReset$ = new Subject<void>();
-  protected readonly debounce = this.#timingHelper.debounce(300);
+  protected readonly debounce = this.#timingHelper.debounce(400);
   protected readonly sourceTextControl = new FormControl('', [
     Validators.required,
     Validators.minLength(2),
