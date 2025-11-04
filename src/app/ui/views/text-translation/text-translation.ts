@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  ElementRef,
   inject,
+  viewChild,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateTextUsecase } from '@core/use-cases';
@@ -38,12 +40,14 @@ type MonitorProgressEvent = {
       <mat-form-field class="w-full max-w-xl min-h-48">
         <mat-label>Leave a comment</mat-label>
         <textarea
+          #sourceTextControlRef
           matInput
           [formControl]="sourceTextControl"
           (input)="debounceTranslateText()"
           rows="8"
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>
+      <output>{{ translationStore.translatedText() }}</output>
     </form>
   `,
   styles: ``,
@@ -55,7 +59,10 @@ export class TextTranslation {
   readonly #localXHelper = inject(LocalXHelper);
   readonly #snackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
-  protected readonly translateStore = this.#store.translation;
+  protected readonly sourceTextControlRef = viewChild.required<
+    ElementRef<HTMLTextAreaElement>
+  >('sourceTextControlRef');
+  protected readonly translationStore = this.#store.translation;
   protected readonly languageSelectorsStore = this.#store.languageSelectors;
 
   protected readonly translationReset$ = new Subject<void>();
@@ -70,11 +77,13 @@ export class TextTranslation {
 
   constructor() {
     effect(() => {
-      const { isLoading } = this.translateStore;
+      const { isLoading } = this.translationStore;
+      const sourceElement = this.sourceTextControlRef().nativeElement;
       if (isLoading()) {
         this.sourceTextControl.disable();
       } else {
         this.sourceTextControl.enable();
+        sourceElement.focus();
       }
     });
     effect(() => {
@@ -99,7 +108,7 @@ export class TextTranslation {
   }
 
   protected handlingTranlation() {
-    const { setIsLoading } = this.translateStore;
+    const { setIsLoading } = this.translationStore;
     setIsLoading(true);
     this.translationReset$.next();
 
@@ -126,7 +135,7 @@ export class TextTranslation {
         tap({
           next: (translation) => {
             this.handleLanguageDetectionLabel(translation, sourceLanguageCode);
-
+            this.translationStore.setTranslation(translation);
             console.log('translation', translation);
           },
           error: (error) => {

@@ -1,5 +1,7 @@
 import { InjectionToken, inject } from "@angular/core";
+import { TranslationText } from "@core/models";
 import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
+
 
 export type TranslationState = {
    sourceText: string;
@@ -54,6 +56,14 @@ export const TranslationStore = signalStore(
     setLanguageCodeDetected(languageCodeDetected: string) {
       patchState(store, {
         languageCodeDetected,
+      });
+    },
+    setTranslation(translation: TranslationText){
+      patchState(store, {
+         sourceText:translation.sourceContent(),
+         translatedText: translation.translatedContent(),
+         sourceLanguageCode: translation.sourceLanguageCode,
+         targetLanguageCode: translation.targetLanguageCode,
       });
     },
     setIsLoading(isLoading: boolean) {
