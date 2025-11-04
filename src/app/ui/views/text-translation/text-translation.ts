@@ -77,6 +77,18 @@ export class TextTranslation {
         this.sourceTextControl.enable();
       }
     });
+    effect(() => {
+      const { sourceLanguageCodeSelected } = this.languageSelectorsStore;
+      const sourceLanguageCode = sourceLanguageCodeSelected();
+      if (sourceLanguageCode === '') {
+        this.sourceTextControl.removeValidators(Validators.minLength(2));
+        this.sourceTextControl.setValidators(Validators.minLength(20));
+      } else {
+        this.sourceTextControl.removeValidators(Validators.minLength(20));
+        this.sourceTextControl.setValidators(Validators.minLength(2));
+      }
+      this.sourceTextControl.updateValueAndValidity();
+    });
   }
 
   protected debounceTranslateText() {
