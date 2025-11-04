@@ -26,8 +26,8 @@ import { tap } from 'rxjs';
       (click)="handleSelection()"
       (keydown.enter)="handleSelection()">
       {{ languageNameSelected() }}
-      @if (autoDetectLabel()){
-        ({{ autoDetectLabel() }})
+      @if (languageDetectedName()){
+        ({{ languageDetectedName() }})
       }
     </button>
   `,
@@ -38,8 +38,8 @@ export class LanguageSelector {
   readonly list = input<Language[]>([]);
   readonly languageCodeSelected = input<string>('');
   readonly handset = input<boolean>(false);
-  readonly autoDetectCode = input<string>('und');
-  readonly autoDetectLabel = input<string>('');
+  readonly autoDetectCode = input<string>('');
+  readonly languageDetectedName = input<string>('');
   readonly #dialog = inject(MatDialog);
   readonly languageSelected = output<Language>();
 
@@ -78,7 +78,7 @@ export class LanguageSelector {
           languages: this.list(),
           languageCodeSelected: this.languageCodeSelected(),
           autoDetectCode: this.autoDetectCode(),
-          autoDetectLabel: this.autoDetectLabel(),
+          autoDetectLabel: this.languageDetectedName(),
         },
       })
       .afterClosed();

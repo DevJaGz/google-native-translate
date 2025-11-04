@@ -11,12 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
 import { LocalXHelper, TimingHelper } from '@shared/helpers';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import {
   MatSnackBar,
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
+import { TranslationText } from '@core/models';
 
 type MonitorProgressEvent = {
   type: 'detector' | 'translator';
@@ -90,15 +91,30 @@ export class TextTranslation {
     setIsLoading(true);
     this.translationReset$.next();
 
+    const text = this.sourceTextControl.value!;
+
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+      this.languageSelectorsStore;
+
+    const sourceLanguageCode = sourceLanguageCodeSelected();
+    const targetLanguageCode = targetLanguageCodeSelected();
+
     const monitor = (event: MonitorProgressEvent) => {
       this.notifyProgress(event);
     };
 
-    this.executeTranslation(monitor)
+    this.executeTranslation(
+      text,
+      sourceLanguageCode,
+      targetLanguageCode,
+      monitor,
+    )
       .pipe(
         takeUntil(this.translationReset$),
         tap({
           next: (translation) => {
+            this.handleLanguageDetectionLabel(translation, sourceLanguageCode);
+
             console.log('translation', translation);
           },
           error: (error) => {
@@ -114,16 +130,11 @@ export class TextTranslation {
   }
 
   protected executeTranslation(
+    text: string,
+    sourceLanguageCode: string,
+    targetLanguageCode: string,
     monitorProgress?: (param: MonitorProgressEvent) => void,
-  ) {
-    const text = this.sourceTextControl.value!;
-
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
-      this.languageSelectorsStore;
-
-    const sourceLanguageCode = sourceLanguageCodeSelected();
-    const targetLanguageCode = targetLanguageCodeSelected();
-
+  ): Observable<TranslationText> {
     return this.#translateText.execute({
       text,
       sourceLanguageCode,
@@ -150,7 +161,6 @@ export class TextTranslation {
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {
-
     const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
       this.languageSelectorsStore;
 
@@ -163,15 +173,19 @@ export class TextTranslation {
       contextLabel
     } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
 
-    const sourceLanguageName = this.#localXHelper.languageNameIn('en').of(sourceLanguageCode);
-    const targetLanguageName = this.#localXHelper.languageNameIn('en').of(targetLanguageCode);
+    const sourceLanguageName = this.#localXHelper
+      .languageNameIn('en')
+      .of(sourceLanguageCode);
+    const targetLanguageName = this.#localXHelper
+      .languageNameIn('en')
+      .of(targetLanguageCode);
     const doneMessage = `A ${contextLabel} model for "${sourceLanguageName}" to "${targetLanguageName}" has been downloaded successfully.`;
     const message =
       event.loaded === event.total ? doneMessage : progressMessage;
     this.displayMessageToUser(message);
   }
 
-  protected displayMessageToUser(message: string) {
+  protected displayMessageToUser(message: string): void {
     if (this.snackbarRef) {
       this.snackbarRef.dismiss();
       this.snackbarRef = null;
@@ -179,5 +193,21 @@ export class TextTranslation {
     this.snackbarRef = this.#snackBar.open(message, undefined, {
       duration: 5000,
     });
+  }
+
+  protected handleLanguageDetectionLabel(
+    translation: TranslationText,
+    sourceLanguageCode: string,
+  ): void {
+    const { setLanguageDetectedName } = this.languageSelectorsStore;
+    if (sourceLanguageCode === translation.sourceLanguageCode) {
+      setLanguageDetectedName('');
+    } else {
+      const name =
+        this.#localXHelper
+          .languageNameIn('en')
+          .of(translation.sourceLanguageCode) ?? '';
+      setLanguageDetectedName(name);
+    }
   }
 }

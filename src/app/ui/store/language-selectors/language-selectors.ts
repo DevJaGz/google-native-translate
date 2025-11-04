@@ -5,11 +5,13 @@ import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 export type LanguageSelectorsState = {
   sourceLanguageCodeSelected: string;
   targetLanguageCodeSelected: string;
+  languageDetectedName: string;
 };
 
 export const initialLanguageSelectorsState: LanguageSelectorsState = {
   sourceLanguageCodeSelected: 'es',
   targetLanguageCodeSelected: 'en',
+  languageDetectedName: '',
 };
 
 export const LANGUAGE_SELECTORS_STATE =
@@ -35,6 +37,11 @@ export const LanguageSelectorsStore = signalStore(
     setTargetLanguageCodeSelected(targetLanguageCodeSelected: string) {
       patchState(store, {
         targetLanguageCodeSelected,
+      });
+    },
+    setLanguageDetectedName(languageDetectedName: string) {
+      patchState(store, {
+        languageDetectedName,
       });
     },
   })),

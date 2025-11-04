@@ -22,6 +22,7 @@ import { Store } from '@ui/store';
         [languageCodeSelected]="
           store.languageSelectors.sourceLanguageCodeSelected()
         "
+        [languageDetectedName]="store.languageSelectors.languageDetectedName()"
         (languageSelected)="
           store.languageSelectors.setSourceLanguageCodeSelected($event.code)
         " />
@@ -56,7 +57,7 @@ export class LanguageSelectors {
   });
 
   readonly isSwapLanguagesDisabled = computed(
-    () => this.store.languageSelectors.sourceLanguageCodeSelected() === 'und',
+    () => this.store.languageSelectors.sourceLanguageCodeSelected() === '',
   );
 
   readonly sourceLanguageList = computed(() => {
@@ -64,7 +65,7 @@ export class LanguageSelectors {
     const targetLanguageCode =
       this.store.languageSelectors.targetLanguageCodeSelected();
     return [
-      Language.create({ code: 'und', name: 'Auto detect' }),
+      Language.create({ code: '', name: 'Auto detect' }),
       ...allLanguages.filter(
         (language) => language.code !== targetLanguageCode,
       ),
