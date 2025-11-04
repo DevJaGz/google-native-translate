@@ -20,12 +20,10 @@ import { Store } from '@ui/store';
         [handset]="breakpointService.isHandset()"
         [list]="sourceLanguageList()"
         [languageCodeSelected]="
-          store.languageSelectors.sourceLanguageCodeSelected()
+          languageSelectorsStore.sourceLanguageCodeSelected()
         "
-        [languageDetectedName]="store.languageSelectors.languageDetectedName()"
-        (languageSelected)="
-          store.languageSelectors.setSourceLanguageCodeSelected($event.code)
-        " />
+        [languageDetectedName]="languageSelectorsStore.languageDetectedName()"
+        (languageSelected)="handleSourceLanguageSelected($event)" />
       <app-icon-button [isDisabled]="isSwapLanguagesDisabled()"
         >swap_horiz</app-icon-button
       >
@@ -33,10 +31,10 @@ import { Store } from '@ui/store';
         [handset]="breakpointService.isHandset()"
         [list]="targetLanguageList()"
         [languageCodeSelected]="
-          store.languageSelectors.targetLanguageCodeSelected()
+          languageSelectorsStore.targetLanguageCodeSelected()
         "
         (languageSelected)="
-          store.languageSelectors.setTargetLanguageCodeSelected($event.code)
+          languageSelectorsStore.setTargetLanguageCodeSelected($event.code)
         " />
     </div>
   `,
@@ -48,7 +46,8 @@ import { Store } from '@ui/store';
 })
 export class LanguageSelectors {
   readonly #listLanguages = inject(ListLanguagesUsecase);
-  protected readonly store = inject(Store);
+  readonly #store = inject(Store);
+  protected readonly languageSelectorsStore = this.#store.languageSelectors;
   protected readonly breakpointService = inject(BreakpointService);
 
   readonly languageList = rxResource({
@@ -57,13 +56,13 @@ export class LanguageSelectors {
   });
 
   readonly isSwapLanguagesDisabled = computed(
-    () => this.store.languageSelectors.sourceLanguageCodeSelected() === '',
+    () => this.#store.languageSelectors.sourceLanguageCodeSelected() === '',
   );
 
   readonly sourceLanguageList = computed(() => {
     const allLanguages = this.languageList.value();
     const targetLanguageCode =
-      this.store.languageSelectors.targetLanguageCodeSelected();
+      this.#store.languageSelectors.targetLanguageCodeSelected();
     return [
       Language.create({ code: '', name: 'Auto detect' }),
       ...allLanguages.filter(
@@ -75,9 +74,18 @@ export class LanguageSelectors {
   readonly targetLanguageList = computed(() => {
     const allLanguages = this.languageList.value();
     const sourceLanguageCode =
-      this.store.languageSelectors.sourceLanguageCodeSelected();
+      this.#store.languageSelectors.sourceLanguageCodeSelected();
     return allLanguages.filter(
       (language) => language.code !== sourceLanguageCode,
     );
   });
+
+  protected handleSourceLanguageSelected(language: Language) {
+    const { setSourceLanguageCodeSelected, setLanguageDetectedName } =
+      this.languageSelectorsStore;
+    setSourceLanguageCodeSelected(language.code);
+    if (language.code !== '') {
+      setLanguageDetectedName('');
+    }
+  }
 }

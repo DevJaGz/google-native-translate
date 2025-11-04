@@ -54,9 +54,9 @@ export class TextTranslation {
   readonly #timingHelper = inject(TimingHelper);
   readonly #localXHelper = inject(LocalXHelper);
   readonly #snackBar = inject(MatSnackBar);
-  protected readonly store = inject(Store);
-  protected readonly translateStore = this.store.translation;
-  protected readonly languageSelectorsStore = this.store.languageSelectors;
+  readonly #store = inject(Store);
+  protected readonly translateStore = this.#store.translation;
+  protected readonly languageSelectorsStore = this.#store.languageSelectors;
 
   protected readonly translationReset$ = new Subject<void>();
   protected readonly debounce = this.#timingHelper.debounce(300);
