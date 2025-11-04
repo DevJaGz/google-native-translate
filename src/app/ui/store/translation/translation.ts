@@ -6,6 +6,8 @@ export type TranslationState = {
    translatedText: string;
    sourceLanguageCode: string;
    targetLanguageCode: string;
+   languageCodeDetected: string;
+   isLoading: boolean;
 };
 
 export const initialTranslationState: TranslationState = {
@@ -13,6 +15,8 @@ export const initialTranslationState: TranslationState = {
   translatedText: '',
   sourceLanguageCode: '',
   targetLanguageCode: '',
+  isLoading: false,
+  languageCodeDetected: '',
 };
 
 export const TRANSLATION_STATE = new InjectionToken<TranslationState>(
@@ -45,6 +49,16 @@ export const TranslationStore = signalStore(
     setTargetLanguageCode(targetLanguageCode: string) {
       patchState(store, {
         targetLanguageCode,
+      });
+    },
+    setLanguageCodeDetected(languageCodeDetected: string) {
+      patchState(store, {
+        languageCodeDetected,
+      });
+    },
+    setIsLoading(isLoading: boolean) {
+      patchState(store, {
+        isLoading,
       });
     },
     clear() {

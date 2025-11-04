@@ -7,6 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
 import { TimingHelper } from '@shared/helpers';
 import { Subject, takeUntil, tap } from 'rxjs';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar,
+} from '@angular/material/snack-bar';
 
 type MonitorProgressEvent = {
   type: 'detector' | 'translator';
@@ -24,6 +29,7 @@ type MonitorProgressEvent = {
   ],
   template: `
     <form>
+      {{ translateStore.isLoading() ? 'Translating...' : '' }}
       <mat-form-field class="w-full max-w-xl min-h-48">
         <mat-label>Leave a comment</mat-label>
         <textarea
@@ -41,7 +47,10 @@ type MonitorProgressEvent = {
 export class TextTranslation {
   readonly #translateText = inject(TranslateTextUsecase);
   readonly #timingHelper = inject(TimingHelper);
+  readonly #snackBar = inject(MatSnackBar);
   protected readonly store = inject(Store);
+  protected readonly translateStore = this.store.translation;
+  protected readonly languageSelectorsStore = this.store.languageSelectors;
 
   protected readonly translationReset$ = new Subject<void>();
   protected readonly debounce = this.#timingHelper.debounce(300);
@@ -51,6 +60,8 @@ export class TextTranslation {
     Validators.maxLength(5000),
   ]);
 
+  protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
+
   protected debounceTranslateText() {
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
       return;
@@ -59,10 +70,12 @@ export class TextTranslation {
   }
 
   protected handlingTranlation() {
+    const { setIsLoading } = this.translateStore;
+    setIsLoading(true);
     this.translationReset$.next();
 
     const monitor = (event: MonitorProgressEvent) => {
-      console.log('Dowloading model...', event.loaded, '/', event.total);
+      this.notifyProgress(event);
     };
 
     this.executeTranslation(monitor)
@@ -74,6 +87,10 @@ export class TextTranslation {
           },
           error: (error) => {
             console.error('Translation error', error);
+            setIsLoading(false);
+          },
+          complete: () => {
+            setIsLoading(false);
           },
         }),
       )
@@ -84,9 +101,12 @@ export class TextTranslation {
     monitorProgress?: (param: MonitorProgressEvent) => void,
   ) {
     const text = this.sourceTextControl.value!;
-    const languageSelectors = this.store.languageSelectors;
-    const sourceLanguageCode = languageSelectors.sourceLanguageCodeSelected();
-    const targetLanguageCode = languageSelectors.targetLanguageCodeSelected();
+
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+      this.languageSelectorsStore;
+
+    const sourceLanguageCode = sourceLanguageCodeSelected();
+    const targetLanguageCode = targetLanguageCodeSelected();
 
     return this.#translateText.execute({
       text,
@@ -110,6 +130,29 @@ export class TextTranslation {
           });
         },
       },
+    });
+  }
+
+  protected notifyProgress(event: MonitorProgressEvent) {
+    const contextLabel =
+      event.type === 'detector' ? 'Detecting language' : 'Translating text';
+    const progressMessage = `A model is being downloaded for ${
+      contextLabel
+    } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
+
+    const doneMessage = `A ${contextLabel} model has been downloaded successfully.`;
+    const message =
+      event.loaded === event.total ? doneMessage : progressMessage;
+    this.displayMessageToUser(message);
+  }
+
+  protected displayMessageToUser(message: string) {
+    if (this.snackbarRef) {
+      this.snackbarRef.dismiss();
+      this.snackbarRef = null;
+    }
+    this.snackbarRef = this.#snackBar.open(message, undefined, {
+      duration: 5000,
     });
   }
 }
