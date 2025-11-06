@@ -1,0 +1,4 @@
+export const SOURCE_TEXT_MAX_LENGTH = 5000;
+export const SOURCE_TEXT_MIN_LENGTH = 2;
+export const DETECTION_MIN_CONFIDENCE = 0.5;
+export const DETECTION_MIN_QUOTA = 20;
