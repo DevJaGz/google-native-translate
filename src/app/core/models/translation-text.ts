@@ -4,20 +4,6 @@ import {
   TranslationContentType,
 } from './translation';
 
-export type TranslateTextRequestOptions = Prettify<
-  AbortOperationOption & MonitorProgressOption
->;
-
-export type TranslateTextRequest = Prettify<
-  {
-    sourceLanguageCode: string;
-    targetLanguageCode: string;
-    text: string;
-  } & {
-    detection?: TranslateTextRequestOptions ;
-    translation?: Prettify<TranslateTextRequestOptions & StreamedOption>;
-  }
->;
 
 export class TranslationText extends Translation {
   readonly contentType = TranslationContentType.TEXT;

@@ -1,17 +1,37 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  AppError,
-  ErrorType,
-  TranslateTextRequest, TranslationText,
-  Usecase
-} from '@core/models';
+import { DETECTOR_MIN_CONFIDENCE, DETECTOR_MIN_QUOTA } from '@core/constants';
+import { AppError, ErrorType, TranslationText, Usecase } from '@core/models';
 import {
   LanguageDetectorPort,
   LanguageDetectorResult,
   LanguagesPort,
   TextTranslatorPort,
 } from '@core/ports';
+import {
+  AbortOperationOption,
+  MonitorProgressOption,
+  StreamedOption,
+} from '@shared/models';
 import { map, Observable, of, scan, switchMap, throwError } from 'rxjs';
+
+export type TranslateTextRequestOptions = Prettify<
+  AbortOperationOption & MonitorProgressOption
+>;
+
+export type TranslateTextRequest = Prettify<
+  {
+    sourceLanguageCode: string;
+    targetLanguageCode: string;
+    text: string;
+  } & {
+    detection?: TranslateTextRequestOptions;
+    translation?: Prettify<TranslateTextRequestOptions & StreamedOption>;
+  }
+>;
+
+export type TranslateTextResponse = {
+
+}
 
 @Injectable({
   providedIn: 'root',
@@ -26,10 +46,13 @@ export class TranslateTextUsecase
   execute(request: TranslateTextRequest): Observable<TranslationText> {
     return this.getSourceLanguageCode(request).pipe(
       switchMap((sourceLanguageCode) =>
-        this.translateText({
-          ...request,
-          text: request.text.trim(),
-        }, sourceLanguageCode),
+        this.translateText(
+          {
+            ...request,
+            text: request.text.trim(),
+          },
+          sourceLanguageCode,
+        ),
       ),
     );
   }
@@ -42,7 +65,7 @@ export class TranslateTextUsecase
       : this.detectLanguage(request).pipe(
           map((results) => {
             const [best] = results;
-            if (!best || best.confidence < 0.5) {
+            if (!best || best.confidence < DETECTOR_MIN_CONFIDENCE) {
               throw AppError.create({ type: ErrorType.LANGUAGE_NOT_DETECTED });
             }
             return best.languageCode;
@@ -53,7 +76,7 @@ export class TranslateTextUsecase
   protected detectLanguage(
     request: TranslateTextRequest,
   ): Observable<LanguageDetectorResult[]> {
-    if (request.text.trim().length < 20) {
+    if (request.text.trim().length < DETECTOR_MIN_QUOTA) {
       return throwError(() =>
         AppError.create({ type: ErrorType.LANGUAGE_DETECTION_MIN_QUOTA }),
       );
@@ -90,7 +113,7 @@ export class TranslateTextUsecase
         },
       })
       .pipe(
-        scan((acc, current) => acc + current,''),
+        scan((acc, current) => acc + current, ''),
         map((translatedText) => {
           return TranslationText.create(
             request.text,
@@ -98,7 +121,7 @@ export class TranslateTextUsecase
             sourceLanguageCode,
             request.targetLanguageCode,
           );
-        })
+        }),
       );
   }
 }
