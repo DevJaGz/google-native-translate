@@ -19,16 +19,16 @@ export class TextTranslationService {
       setLanguageCodeDetected,
       setIsLoading,
       setTranslatedText,
-      sourceText
+      sourceText,
     } = this.translationStore;
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected,  } =
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
       this.languageSelectorsStore;
     const sourceLanguageCode = sourceLanguageCodeSelected();
     const targetLanguageCode = targetLanguageCodeSelected();
     const previousText = sourceText();
     const currentText = text.trim();
 
-    if (currentText === previousText){
+    if (currentText === previousText) {
       return;
     }
 
@@ -37,7 +37,6 @@ export class TextTranslationService {
       targetLanguageCode,
       isLoading: true,
       sourceText: currentText,
-      translatedText: '',
     });
 
     this.reset$.next();
@@ -72,7 +71,10 @@ export class TextTranslationService {
         scan((acc, current) => acc + current.translatedContent(), ''),
         tap({
           next: (translatedText) => {
-            setTranslatedText(translatedText);
+            requestAnimationFrame(() => {
+              console.log('translatedText', translatedText);
+              setTranslatedText(translatedText);
+            });
           },
           error: (error) => {
             console.error('Translation error', error);

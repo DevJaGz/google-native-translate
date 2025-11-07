@@ -105,7 +105,7 @@ export class TranslateTextUsecase
         options: {
           abortSignal: request.translation?.abortSignal,
           monitor: request.translation?.monitor,
-          stream: request.translation?.stream,
+          stream: request.translation?.stream ?? true,
         },
       })
       .pipe(
