@@ -61,7 +61,7 @@ declare global {
     translateStreaming(
       input: string,
       options?: { signal?: AbortSignal }
-    ): Promise<ReadableStream<string>>;
+    ): ReadableStream<string>;
   }
 }
 

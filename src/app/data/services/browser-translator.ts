@@ -17,7 +17,6 @@ export class BrowserTranslator
   protected currentSourceLanguageCode: string | null = null;
   protected currentTargetLanguageCode: string | null = null;
 
-
   translate(request: TextTranslatorRequest): Observable<string> {
     return request.options?.stream
       ? this.translateTextStreaming(request)
@@ -50,20 +49,19 @@ export class BrowserTranslator
     request: TextTranslatorRequest,
   ): Observable<string> {
     return this.getSession(request).pipe(
-      switchMap((session) =>
-        from(
-          session.translateStreaming(request.text, {
-            signal: request.options?.abortSignal,
-          }),
-        ),
-      ),
       tap({
         next: () => {
           this.currentSourceLanguageCode = request.sourceLanguageCode;
           this.currentTargetLanguageCode = request.targetLanguageCode;
         },
       }),
-      switchMap((stream) => this.#iterableHelper.toObservable(stream)),
+      switchMap((session) =>
+        this.#iterableHelper.toObservable(
+          session.translateStreaming(request.text, {
+            signal: request.options?.abortSignal,
+          }),
+        ),
+      ),
     );
   }
 
