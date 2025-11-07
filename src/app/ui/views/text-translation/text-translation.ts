@@ -96,9 +96,12 @@ export class TextTranslation {
   }
 
   protected translate() {
-    const { setTranslatedText } = this.translationStore;
+    const { patchState } = this.translationStore;
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
-      setTranslatedText('');
+      patchState({
+        translatedText: '',
+        sourceText: '',
+      });
       return;
     }
     this.#textTranslationService.translate(this.sourceTextControl.value);
