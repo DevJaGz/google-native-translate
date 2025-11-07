@@ -13,17 +13,23 @@ export class TextTranslationService {
   protected readonly languageSelectorsStore = this.#store.languageSelectors;
   protected readonly reset$ = new Subject<void>();
 
-  translate(
-    text: string,
-  ): void {
-    const { patchState } = this.translationStore;
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } = this.languageSelectorsStore;
+  translate(text: string): void {
+    const {
+      patchState,
+      setLanguageCodeDetected,
+      setIsLoading,
+      setTranslatedText,
+    } = this.translationStore;
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+      this.languageSelectorsStore;
     const sourceLanguageCode = sourceLanguageCodeSelected();
     const targetLanguageCode = targetLanguageCodeSelected();
 
     patchState({
       isLoading: true,
       translatedText: '',
+      sourceLanguageCode: sourceLanguageCode,
+      targetLanguageCode: targetLanguageCode,
     });
 
     this.reset$.next();
@@ -46,23 +52,26 @@ export class TextTranslationService {
       })
       .pipe(
         takeUntil(this.reset$),
+        tap({
+          next: (translatation) => {
+            setLanguageCodeDetected(
+              sourceLanguageCode === translatation.sourceLanguageCode
+                ? ''
+                : translatation.sourceLanguageCode,
+            );
+          },
+        }),
         scan((acc, current) => acc + current.translatedContent(), ''),
         tap({
           next: (translatedText) => {
-            patchState({
-              translatedText,
-            });
+            setTranslatedText(translatedText);
           },
           error: (error) => {
             console.error('Translation error', error);
-            patchState({
-              isLoading: false,
-            });
+            setIsLoading(false);
           },
           complete: () => {
-            patchState({
-              isLoading: false,
-            });
+            setIsLoading(false);
           },
         }),
       )

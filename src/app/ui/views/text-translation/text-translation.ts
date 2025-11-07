@@ -45,7 +45,7 @@ type MonitorProgressEvent = {
           #sourceTextControlRef
           matInput
           [formControl]="sourceTextControl"
-          (input)="translateText()"
+          (input.debounce.400ms)="translate()"
           rows="8"
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>
@@ -94,11 +94,12 @@ export class TextTranslation {
     });
   }
 
-  protected translateText() {
+  protected translate() {
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
       return;
     }
-    this.#textTranslationService.translate(this.sourceTextControl.value);
+    console.log('translate', this.sourceTextControl.value);
+    // this.#textTranslationService.translate(this.sourceTextControl.value);
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {
