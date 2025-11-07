@@ -1,2 +1,2 @@
-export * from './iterable';
+export * from './readable-stream';
 export * from './localx';

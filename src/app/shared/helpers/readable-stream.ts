@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class IterableHelper {
-  toObservable<T>(iterable: AsyncIterable<T>): Observable<T> {
+export class ReadableStreamHelper {
+  toObservable<T>(iterable: ReadableStream<T>): Observable<T> {
+
     return new Observable<T>((subscriber) => {
       let cancelled = false;
 
