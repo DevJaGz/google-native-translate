@@ -97,6 +97,13 @@ export class TranslateTextUsecase
     request: TranslateTextRequest,
     sourceLanguageCode: string,
   ): Observable<TranslationText> {
+    const translation = TranslationText.create(
+      request.text,
+      '',
+      sourceLanguageCode,
+      request.targetLanguageCode,
+    );
+
     return this.#textTranslator
       .translate({
         text: request.text,
@@ -110,12 +117,8 @@ export class TranslateTextUsecase
       })
       .pipe(
         map((translatedText) => {
-          return TranslationText.create(
-            request.text,
-            translatedText,
-            sourceLanguageCode,
-            request.targetLanguageCode,
-          );
+          translation.updateTranslatedContent(translatedText);
+          return translation;
         }),
       );
   }
