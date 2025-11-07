@@ -1,15 +1,14 @@
-import { InjectionToken, inject } from "@angular/core";
-import { TranslationText } from "@core/models";
-import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
-
+import { InjectionToken, inject } from '@angular/core';
+import { TranslationText } from '@core/models';
+import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 
 export type TranslationState = {
-   sourceText: string;
-   translatedText: string;
-   sourceLanguageCode: string;
-   targetLanguageCode: string;
-   languageCodeDetected: string;
-   isLoading: boolean;
+  sourceText: string;
+  translatedText: string;
+  sourceLanguageCode: string;
+  targetLanguageCode: string;
+  languageCodeDetected: string;
+  isLoading: boolean;
 };
 
 export const initialTranslationState: TranslationState = {
@@ -58,13 +57,8 @@ export const TranslationStore = signalStore(
         languageCodeDetected,
       });
     },
-    setTranslation(translation: TranslationText){
-      patchState(store, {
-         sourceText:translation.sourceContent(),
-         translatedText: translation.translatedContent(),
-         sourceLanguageCode: translation.sourceLanguageCode,
-         targetLanguageCode: translation.targetLanguageCode,
-      });
+    patchState(state: Partial<TranslationState>) {
+      patchState(store, state);
     },
     setIsLoading(isLoading: boolean) {
       patchState(store, {
@@ -79,5 +73,5 @@ export const TranslationStore = signalStore(
         targetLanguageCode: '',
       });
     },
-    })),
+  })),
 );

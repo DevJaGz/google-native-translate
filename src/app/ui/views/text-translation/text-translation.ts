@@ -20,6 +20,8 @@ import {
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
 import { TranslationText } from '@core/models';
+import { FormService } from './form';
+import { TextTranslationService } from '@ui/services';
 
 type MonitorProgressEvent = {
   type: 'detector' | 'translator';
@@ -43,45 +45,39 @@ type MonitorProgressEvent = {
           #sourceTextControlRef
           matInput
           [formControl]="sourceTextControl"
-          (input)="debounceTranslateText()"
+          (input)="translateText()"
           rows="8"
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>
       <output class="text-2xl p-2 outline outline-primary block rounded">
         @if (translationStore.isLoading()) {
           Translating...
-        } 
-        @else if (translationStore.translatedText() === '') {
+        } @else if (translationStore.translatedText() === '') {
           Translation
-        }
-        @else {
+        } @else {
           {{ translationStore.translatedText() }}
         }
       </output>
     </form>
   `,
   styles: ``,
+  providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextTranslation {
-  readonly #translateText = inject(TranslateTextUsecase);
-  readonly #timingHelper = inject(TimingHelper);
+  readonly #textTranslationService = inject(TextTranslationService);
+  readonly #formService = inject(FormService);
   readonly #localXHelper = inject(LocalXHelper);
   readonly #snackBar = inject(MatSnackBar);
   readonly #store = inject(Store);
+
   protected readonly sourceTextControlRef = viewChild.required<
     ElementRef<HTMLTextAreaElement>
   >('sourceTextControlRef');
+
   protected readonly translationStore = this.#store.translation;
   protected readonly languageSelectorsStore = this.#store.languageSelectors;
-
-  protected readonly translationReset$ = new Subject<void>();
-  protected readonly debounce = this.#timingHelper.debounce(400);
-  protected readonly sourceTextControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(2),
-    Validators.maxLength(5000),
-  ]);
+  protected readonly sourceTextControl = this.#formService.sourceTextControl;
 
   protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
@@ -96,99 +92,13 @@ export class TextTranslation {
         sourceElement.focus();
       }
     });
-    effect(() => {
-      const { sourceLanguageCodeSelected } = this.languageSelectorsStore;
-      const sourceLanguageCode = sourceLanguageCodeSelected();
-      if (sourceLanguageCode === '') {
-        this.sourceTextControl.removeValidators(Validators.minLength(2));
-        this.sourceTextControl.setValidators(Validators.minLength(20));
-      } else {
-        this.sourceTextControl.removeValidators(Validators.minLength(20));
-        this.sourceTextControl.setValidators(Validators.minLength(2));
-      }
-      this.sourceTextControl.updateValueAndValidity();
-    });
   }
 
-  protected debounceTranslateText() {
+  protected translateText() {
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
       return;
     }
-    this.debounce(this.handlingTranlation.bind(this));
-  }
-
-  protected handlingTranlation() {
-    const { setIsLoading } = this.translationStore;
-    setIsLoading(true);
-    this.translationReset$.next();
-
-    const text = this.sourceTextControl.value!;
-
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
-      this.languageSelectorsStore;
-
-    const sourceLanguageCode = sourceLanguageCodeSelected();
-    const targetLanguageCode = targetLanguageCodeSelected();
-
-    const monitor = (event: MonitorProgressEvent) => {
-      this.notifyProgress(event);
-    };
-
-    this.executeTranslation(
-      text,
-      sourceLanguageCode,
-      targetLanguageCode,
-      monitor,
-    )
-      .pipe(
-        takeUntil(this.translationReset$),
-        tap({
-          next: (translation) => {
-            this.handleLanguageDetectionLabel(translation, sourceLanguageCode);
-            this.translationStore.setTranslation(translation);
-            console.log('translation', translation);
-          },
-          error: (error) => {
-            console.error('Translation error', error);
-            setIsLoading(false);
-          },
-          complete: () => {
-            setIsLoading(false);
-          },
-        }),
-      )
-      .subscribe();
-  }
-
-  protected executeTranslation(
-    text: string,
-    sourceLanguageCode: string,
-    targetLanguageCode: string,
-    monitorProgress?: (param: MonitorProgressEvent) => void,
-  ): Observable<TranslationText> {
-    return this.#translateText.execute({
-      text,
-      sourceLanguageCode,
-      targetLanguageCode,
-      detection: {
-        monitor: (event) => {
-          monitorProgress?.({
-            type: 'detector',
-            loaded: event.loaded,
-            total: event.total,
-          });
-        },
-      },
-      translation: {
-        monitor: (event) => {
-          monitorProgress?.({
-            type: 'translator',
-            loaded: event.loaded,
-            total: event.total,
-          });
-        },
-      },
-    });
+    this.#textTranslationService.translate(this.sourceTextControl.value);
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {

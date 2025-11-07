@@ -29,10 +29,6 @@ export type TranslateTextRequest = Prettify<
   }
 >;
 
-export type TranslateTextResponse = {
-
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -113,7 +109,6 @@ export class TranslateTextUsecase
         },
       })
       .pipe(
-        scan((acc, current) => acc + current, ''),
         map((translatedText) => {
           return TranslationText.create(
             request.text,

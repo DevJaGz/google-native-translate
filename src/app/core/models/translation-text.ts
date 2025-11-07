@@ -24,6 +24,10 @@ export class TranslationText extends Translation {
     return this.targetText;
   }
 
+  updateTranslatedContent(translatedContent: string) {
+    this.targetText = translatedContent;
+  }
+
   static create(
     sourceText: string,
     targetText: string,
