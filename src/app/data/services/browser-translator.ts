@@ -4,7 +4,7 @@ import { TextTranslatorRequest, TextTranslatorPort } from '@core/ports';
 import { BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
 import { AppError, ErrorType } from '@core/models';
-import { ReadableStreamHelper } from '@shared/helpers';
+import { IterableHelper } from '@shared/helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ export class BrowserTranslator
   extends BrowserTranslationApi<Translator, TextTranslatorRequest>
   implements TextTranslatorPort
 {
-  readonly #readableStreamHelper = inject(ReadableStreamHelper);
+  readonly #iterableHelper = inject(IterableHelper);
   protected currentSourceLanguageCode: string | null = null;
   protected currentTargetLanguageCode: string | null = null;
 
@@ -63,7 +63,7 @@ export class BrowserTranslator
           this.currentTargetLanguageCode = request.targetLanguageCode;
         },
       }),
-      switchMap((stream) => this.#readableStreamHelper.toObservable(stream)),
+      switchMap((stream) => this.#iterableHelper.toObservable(stream)),
     );
   }
 

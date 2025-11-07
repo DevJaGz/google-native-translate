@@ -1,3 +1,3 @@
-export * from './readable-stream';
+export * from './iterable';
 export * from './timing';
 export * from './localx';
