@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { TranslateTextUsecase } from '@core/use-cases';
 import { Store } from '@ui/store';
 import { scan, Subject, takeUntil, tap } from 'rxjs';
@@ -71,10 +71,7 @@ export class TextTranslationService {
         scan((acc, current) => acc + current.translatedContent(), ''),
         tap({
           next: (translatedText) => {
-            requestAnimationFrame(() => {
-              console.log('translatedText', translatedText);
               setTranslatedText(translatedText);
-            });
           },
           error: (error) => {
             console.error('Translation error', error);

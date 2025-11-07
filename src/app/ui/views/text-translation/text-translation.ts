@@ -6,14 +6,12 @@ import {
   inject,
   viewChild,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslateTextUsecase } from '@core/use-cases';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
-import { LocalXHelper, TimingHelper } from '@shared/helpers';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { LocalXHelper } from '@shared/helpers';
 import {
   MatSnackBar,
   MatSnackBarRef,
@@ -50,7 +48,10 @@ type MonitorProgressEvent = {
           placeholder="Ex. It makes me feel..."></textarea>
       </mat-form-field>
       <output class="text-2xl p-2 outline outline-primary block rounded">
-        @if (translationStore.isLoading()) {
+        @if (
+          translationStore.isLoading() &&
+          translationStore.translatedText() === ''
+        ) {
           Translating...
         } @else if (translationStore.translatedText() === '') {
           Translation
@@ -95,10 +96,11 @@ export class TextTranslation {
   }
 
   protected translate() {
+    const { setTranslatedText } = this.translationStore;
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
+      setTranslatedText('');
       return;
     }
-    console.log('translate', this.sourceTextControl.value);
     this.#textTranslationService.translate(this.sourceTextControl.value);
   }
 
