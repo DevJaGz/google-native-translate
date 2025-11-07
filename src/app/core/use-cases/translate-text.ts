@@ -45,7 +45,7 @@ export class TranslateTextUsecase
         this.translateText(
           {
             ...request,
-            text: request.text.trim(),
+            text: request.text,
           },
           sourceLanguageCode,
         ),

@@ -19,17 +19,25 @@ export class TextTranslationService {
       setLanguageCodeDetected,
       setIsLoading,
       setTranslatedText,
+      sourceText
     } = this.translationStore;
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected,  } =
       this.languageSelectorsStore;
     const sourceLanguageCode = sourceLanguageCodeSelected();
     const targetLanguageCode = targetLanguageCodeSelected();
+    const previousText = sourceText();
+    const currentText = text.trim();
+
+    if (currentText === previousText){
+      return;
+    }
 
     patchState({
+      sourceLanguageCode,
+      targetLanguageCode,
       isLoading: true,
+      sourceText: currentText,
       translatedText: '',
-      sourceLanguageCode: sourceLanguageCode,
-      targetLanguageCode: targetLanguageCode,
     });
 
     this.reset$.next();

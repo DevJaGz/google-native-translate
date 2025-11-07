@@ -99,7 +99,7 @@ export class TextTranslation {
       return;
     }
     console.log('translate', this.sourceTextControl.value);
-    // this.#textTranslationService.translate(this.sourceTextControl.value);
+    this.#textTranslationService.translate(this.sourceTextControl.value);
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {
