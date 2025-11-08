@@ -10,8 +10,6 @@ import { Store } from '@ui/store';
 @Injectable()
 export class FormService {
   readonly #store = inject(Store);
-  protected readonly translationStore = this.#store.translation;
-  protected readonly languageSelectorsStore = this.#store.languageSelectors;
 
   readonly sourceTextControl = new FormControl('', [
     Validators.required,
@@ -21,8 +19,8 @@ export class FormService {
 
   constructor() {
     effect(() => {
-      const { isLoading } = this.translationStore;
-      if (isLoading()) {
+      const isLoading = this.#store.isLoading();
+      if (isLoading) {
         this.sourceTextControl.disable();
       } else {
         this.sourceTextControl.enable();
@@ -30,8 +28,7 @@ export class FormService {
     });
 
     effect(() => {
-      const { sourceLanguageCodeSelected } = this.languageSelectorsStore;
-      const sourceLanguageCode = sourceLanguageCodeSelected();
+      const sourceLanguageCode = this.#store.sourceLanguageCode();
       if (sourceLanguageCode === '') {
         this.sourceTextControl.removeValidators(
           Validators.minLength(SOURCE_TEXT_MIN_LENGTH),

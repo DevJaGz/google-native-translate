@@ -1,2 +1,2 @@
 export * from './readable-stream';
-export * from './localx';
+export * from './local-x';

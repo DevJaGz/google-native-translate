@@ -20,6 +20,7 @@ import {
 import { TranslationText } from '@core/models';
 import { FormService } from './form';
 import { TextTranslationService } from '@ui/services';
+import { AUTO_DETECT_LANGUAGE_CODE } from '@ui/constants';
 
 type MonitorProgressEvent = {
   type: 'detector' | 'translator';
@@ -36,7 +37,8 @@ type MonitorProgressEvent = {
     ReactiveFormsModule,
   ],
   template: `
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-x-4 gap-y-0">
+    <div
+      class="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-x-4 gap-y-0">
       <form>
         <mat-form-field
           class="w-full max-w-xl min-h-48"
@@ -52,15 +54,12 @@ type MonitorProgressEvent = {
         </mat-form-field>
       </form>
       <output class="text-2xl p-2">
-        @if (
-          translationStore.isLoading() &&
-          translationStore.translatedText() === ''
-        ) {
+        @if (store.isLoading() && store.translatedText() === '') {
           Translating...
-        } @else if (translationStore.translatedText() === '') {
+        } @else if (store.translatedText() === '') {
           Translation
         } @else {
-          {{ translationStore.translatedText() }}
+          {{ store.translatedText() }}
         }
       </output>
     </div>
@@ -74,23 +73,21 @@ export class TextTranslation {
   readonly #formService = inject(FormService);
   readonly #localXHelper = inject(LocalXHelper);
   readonly #snackBar = inject(MatSnackBar);
-  readonly #store = inject(Store);
+  protected readonly store = inject(Store);
 
   protected readonly sourceTextControlRef = viewChild.required<
     ElementRef<HTMLTextAreaElement>
   >('sourceTextControlRef');
 
-  protected readonly translationStore = this.#store.translation;
-  protected readonly languageSelectorsStore = this.#store.languageSelectors;
   protected readonly sourceTextControl = this.#formService.sourceTextControl;
 
   protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   constructor() {
     effect(() => {
-      const { isLoading } = this.translationStore;
+      const isLoading = this.store.isLoading();
       const sourceElement = this.sourceTextControlRef().nativeElement;
-      if (isLoading()) {
+      if (isLoading) {
         this.sourceTextControl.disable();
       } else {
         this.sourceTextControl.enable();
@@ -100,9 +97,8 @@ export class TextTranslation {
   }
 
   protected translate() {
-    const { patchState } = this.translationStore;
     if (!this.sourceTextControl.value || !this.sourceTextControl.valid) {
-      patchState({
+      this.store.patchState({
         translatedText: '',
         sourceText: '',
       });
@@ -112,11 +108,8 @@ export class TextTranslation {
   }
 
   protected notifyProgress(event: MonitorProgressEvent) {
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
-      this.languageSelectorsStore;
-
-    const sourceLanguageCode = sourceLanguageCodeSelected();
-    const targetLanguageCode = targetLanguageCodeSelected();
+    const sourceLanguageCode = this.store.sourceLanguageCode();
+    const targetLanguageCode = this.store.targetLanguageCode();
 
     const contextLabel =
       event.type === 'detector' ? 'Detecting language' : 'Translating text';
@@ -150,15 +143,11 @@ export class TextTranslation {
     translation: TranslationText,
     sourceLanguageCode: string,
   ): void {
-    const { setLanguageDetectedName } = this.languageSelectorsStore;
-    if (sourceLanguageCode === translation.sourceLanguageCode) {
-      setLanguageDetectedName('');
-    } else {
-      const name =
-        this.#localXHelper
-          .languageNameIn('en')
-          .of(translation.sourceLanguageCode) ?? '';
-      setLanguageDetectedName(name);
-    }
+    this.store.patchState({
+      languageDetectedCode:
+        sourceLanguageCode === translation.sourceLanguageCode
+          ? AUTO_DETECT_LANGUAGE_CODE
+          : translation.sourceLanguageCode,
+    });
   }
 }

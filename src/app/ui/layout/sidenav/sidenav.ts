@@ -13,8 +13,8 @@ import { Store } from '@ui/store';
           <app-icon-button
             tooltipText="Close Main Menu"
             ariaLabel="Close Main Menu"
-            (click)="store.sidenav.setIsOpen(false)"
-            (keydown.enter)="store.sidenav.setIsOpen(false)">
+            (click)="store.patchState({ sidenav: { isOpen: false } })"
+            (keydown.enter)="store.patchState({ sidenav: { isOpen: false } })">
             Close
           </app-icon-button>
         </div>

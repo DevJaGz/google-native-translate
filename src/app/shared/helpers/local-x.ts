@@ -4,7 +4,10 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class LocalXHelper {
-  languageNameIn(locales: Intl.LocalesArgument, options?: Omit<Intl.DisplayNamesOptions, 'type'>) {
+  languageNameIn(
+    locales: Intl.LocalesArgument,
+    options?: Omit<Intl.DisplayNamesOptions, 'type'>,
+  ) {
     return new Intl.DisplayNames(locales, { type: 'language', ...options });
   }
 }

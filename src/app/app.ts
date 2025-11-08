@@ -25,7 +25,7 @@ import { Store } from '@ui/store';
       <mat-drawer
         mode="over"
         [opened]="store.sidenav.isOpen()"
-        (closed)="store.sidenav.setIsOpen(false)"
+        (closed)="store.patchState({ sidenav: { isOpen: false } })"
       >
         <app-sidenav />
       </mat-drawer>

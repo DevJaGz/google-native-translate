@@ -8,6 +8,10 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Language } from '@core/models';
 import { ListLanguagesUsecase } from '@core/use-cases';
 import { IconButton, LanguageSelector } from '@ui/components';
+import {
+  AUTO_DETECT_LANGUAGE_CODE,
+  AUTO_DETECT_LANGUAGE_NAME,
+} from '@ui/constants';
 import { BreakpointService } from '@ui/services';
 import { Store } from '@ui/store';
 
@@ -19,22 +23,18 @@ import { Store } from '@ui/store';
       <app-language-selector
         [handset]="breakpointService.isHandset()"
         [list]="sourceLanguageList()"
-        [languageCodeSelected]="
-          languageSelectorsStore.sourceLanguageCodeSelected()
-        "
-        [languageDetectedName]="languageSelectorsStore.languageDetectedName()"
+        [languageCodeSelected]="store.sourceLanguageCode()"
+        [languageDetectedName]="store.languageDetectedName()"
         (languageSelected)="handleSourceLanguageSelected($event)" />
-      <app-icon-button [isDisabled]="isSwapLanguagesDisabled()"
+      <app-icon-button [isDisabled]="store.isAutoDetect()"
         >swap_horiz</app-icon-button
       >
       <app-language-selector
         [handset]="breakpointService.isHandset()"
         [list]="targetLanguageList()"
-        [languageCodeSelected]="
-          languageSelectorsStore.targetLanguageCodeSelected()
-        "
+        [languageCodeSelected]="store.targetLanguageCode()"
         (languageSelected)="
-          languageSelectorsStore.setTargetLanguageCodeSelected($event.code)
+          store.patchState({ targetLanguageCode: $event.code })
         " />
     </div>
   `,
@@ -46,8 +46,7 @@ import { Store } from '@ui/store';
 })
 export class LanguageSelectors {
   readonly #listLanguages = inject(ListLanguagesUsecase);
-  readonly #store = inject(Store);
-  protected readonly languageSelectorsStore = this.#store.languageSelectors;
+  protected readonly store = inject(Store);
   protected readonly breakpointService = inject(BreakpointService);
 
   readonly languageList = rxResource({
@@ -55,16 +54,14 @@ export class LanguageSelectors {
     defaultValue: [],
   });
 
-  readonly isSwapLanguagesDisabled = computed(
-    () => this.#store.languageSelectors.sourceLanguageCodeSelected() === '',
-  );
-
   readonly sourceLanguageList = computed(() => {
     const allLanguages = this.languageList.value();
-    const targetLanguageCode =
-      this.#store.languageSelectors.targetLanguageCodeSelected();
+    const targetLanguageCode = this.store.targetLanguageName();
     return [
-      Language.create({ code: '', name: 'Auto detect' }),
+      Language.create({
+        code: AUTO_DETECT_LANGUAGE_CODE,
+        name: AUTO_DETECT_LANGUAGE_NAME,
+      }),
       ...allLanguages.filter(
         (language) => language.code !== targetLanguageCode,
       ),
@@ -73,19 +70,18 @@ export class LanguageSelectors {
 
   readonly targetLanguageList = computed(() => {
     const allLanguages = this.languageList.value();
-    const sourceLanguageCode =
-      this.#store.languageSelectors.sourceLanguageCodeSelected();
+    const sourceLanguageCode = this.store.sourceLanguageCode();
     return allLanguages.filter(
       (language) => language.code !== sourceLanguageCode,
     );
   });
 
   protected handleSourceLanguageSelected(language: Language) {
-    const { setSourceLanguageCodeSelected, setLanguageDetectedName } =
-      this.languageSelectorsStore;
-    setSourceLanguageCodeSelected(language.code);
-    if (language.code !== '') {
-      setLanguageDetectedName('');
-    }
+    const isAutoDetect = this.store.isAutoDetect();
+    const languageDetectedCode = this.store.languageDetectedCode();
+    this.store.patchState({
+      sourceLanguageCode: language.code,
+      languageDetectedCode: isAutoDetect ? languageDetectedCode : '',
+    });
   }
 }

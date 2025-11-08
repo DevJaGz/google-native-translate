@@ -15,6 +15,10 @@ import {
 } from './language-selector-modal';
 import { Language } from '@core/models';
 import { tap } from 'rxjs';
+import {
+  AUTO_DETECT_LANGUAGE_CODE,
+  AUTO_DETECT_LANGUAGE_NAME,
+} from '@ui/constants';
 
 @Component({
   selector: 'app-language-selector',
@@ -26,7 +30,7 @@ import { tap } from 'rxjs';
       (click)="handleSelection()"
       (keydown.enter)="handleSelection()">
       {{ languageNameSelected() }}
-      @if (languageDetectedName()){
+      @if (canDisplayLanguageDetectedName()) {
         ({{ languageDetectedName() }})
       }
     </button>
@@ -38,8 +42,11 @@ export class LanguageSelector {
   readonly list = input<Language[]>([]);
   readonly languageCodeSelected = input<string>('');
   readonly handset = input<boolean>(false);
-  readonly autoDetectCode = input<string>('');
+  readonly autoDetectCode = input<string>(AUTO_DETECT_LANGUAGE_CODE);
   readonly languageDetectedName = input<string>('');
+  readonly canDisplayLanguageDetectedName = computed(
+    () => this.languageDetectedName() !== AUTO_DETECT_LANGUAGE_NAME,
+  );
   readonly #dialog = inject(MatDialog);
   readonly languageSelected = output<Language>();
 

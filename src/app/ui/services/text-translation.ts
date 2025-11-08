@@ -5,6 +5,7 @@ import { scan, Subject, takeUntil, tap } from 'rxjs';
 import { NotificationService } from './notification';
 import { LocalXHelper } from '@shared/helpers';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { AUTO_DETECT_LANGUAGE_CODE } from '@ui/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,35 +15,24 @@ export class TextTranslationService {
   readonly #translateText = inject(TranslateTextUsecase);
   readonly #notificationService = inject(NotificationService);
   readonly #localXHelper = inject(LocalXHelper);
-  protected readonly translationStore = this.#store.translation;
-  protected readonly languageSelectorsStore = this.#store.languageSelectors;
   protected readonly reset$ = new Subject<void>();
   protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   translate(text: string): void {
-    const {
-      patchState,
-      setLanguageCodeDetected,
-      setIsLoading,
-      setTranslatedText,
-      sourceText,
-    } = this.translationStore;
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
-      this.languageSelectorsStore;
-    const sourceLanguageCode = sourceLanguageCodeSelected();
-    const targetLanguageCode = targetLanguageCodeSelected();
-    const previousText = sourceText();
+    const sourceLanguageCode = this.#store.sourceLanguageCode();
+    const targetLanguageCode = this.#store.targetLanguageName();
+    const previousText = this.#store.sourceText();
     const currentText = text.trim();
 
     if (currentText === previousText) {
       return;
     }
 
-    patchState({
-      sourceLanguageCode,
-      targetLanguageCode,
+    this.#store.patchState({
       isLoading: true,
       sourceText: currentText,
+      sourceLanguageCode: sourceLanguageCode,
+      targetLanguageCode: targetLanguageCode,
     });
 
     this.reset$.next();
@@ -67,24 +57,26 @@ export class TextTranslationService {
         takeUntil(this.reset$),
         tap({
           next: (translatation) => {
-            setLanguageCodeDetected(
-              sourceLanguageCode === translatation.sourceLanguageCode
-                ? ''
-                : translatation.sourceLanguageCode,
-            );
+            this.#store.patchState({
+              languageDetectedCode:
+                // When this is true, is because no auto-detect was performed
+                sourceLanguageCode === translatation.sourceLanguageCode
+                  ? AUTO_DETECT_LANGUAGE_CODE
+                  : translatation.sourceLanguageCode,
+            });
           },
         }),
         scan((acc, current) => acc + current.translatedContent(), ''),
         tap({
           next: (translatedText) => {
-            setTranslatedText(translatedText);
+            this.#store.patchState({ translatedText });
           },
           error: (error) => {
             console.error('Translation error', error);
-            setIsLoading(false);
+            this.#store.patchState({ isLoading: false });
           },
           complete: () => {
-            setIsLoading(false);
+            this.#store.patchState({ isLoading: false });
           },
         }),
       )
@@ -95,11 +87,8 @@ export class TextTranslationService {
     event: ProgressEvent,
     contextLabel: string,
   ) {
-    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
-      this.languageSelectorsStore;
-
-    const sourceLanguageCode = sourceLanguageCodeSelected();
-    const targetLanguageCode = targetLanguageCodeSelected();
+    const sourceLanguageCode = this.#store.sourceLanguageCode();
+    const targetLanguageCode = this.#store.targetLanguageCode();
 
     const progressMessage = `A model is being downloaded for ${
       contextLabel
@@ -112,7 +101,10 @@ export class TextTranslationService {
       ? this.#localXHelper.languageNameIn('en').of(targetLanguageCode)
       : 'Unknown';
 
-    const rangeMessage = sourceLanguageCode && targetLanguageCode ? ` for "${sourceLanguageName}" to "${targetLanguageName}"` : '';
+    const rangeMessage =
+      sourceLanguageCode && targetLanguageCode
+        ? ` for "${sourceLanguageName}" to "${targetLanguageName}"`
+        : '';
 
     const doneMessage = `A ${contextLabel} model ${rangeMessage} has been downloaded successfully.`;
     const message =
