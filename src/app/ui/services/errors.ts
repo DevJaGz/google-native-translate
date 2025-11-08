@@ -21,7 +21,7 @@ export class ErrorsService implements ErrorHandler {
 
     if (error instanceof AppError) {
       const message = this.#errorMessages[error.type];
-      this.#notificationService.info(message);
+      this.#notificationService.error({ message });
       return;
     }
   }
