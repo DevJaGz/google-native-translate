@@ -33,7 +33,7 @@ export const initialState: State = {
   translatedText: '',
   sourceLanguageCode: '',
   targetLanguageCode: 'en',
-  languageDetectedCode: '',
+  languageDetectedCode: AUTO_DETECT_LANGUAGE_CODE,
   isLoading: false,
 };
 

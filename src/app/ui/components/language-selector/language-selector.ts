@@ -43,7 +43,7 @@ export class LanguageSelector {
   readonly languageCodeSelected = input<string>('');
   readonly handset = input<boolean>(false);
   readonly autoDetectCode = input<string>(AUTO_DETECT_LANGUAGE_CODE);
-  readonly languageDetectedName = input<string>('');
+  readonly languageDetectedName = input<string>(AUTO_DETECT_LANGUAGE_NAME);
   readonly canDisplayLanguageDetectedName = computed(
     () => this.languageDetectedName() !== AUTO_DETECT_LANGUAGE_NAME,
   );

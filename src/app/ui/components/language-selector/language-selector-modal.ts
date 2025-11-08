@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Language } from '@core/models';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AUTO_DETECT_LANGUAGE_NAME } from '@ui/constants';
 export type LanguageSelectorModalData = {
   languages: Language[];
   languageCodeSelected?: string;
@@ -84,7 +85,7 @@ export type LanguageSelectorModalResult =
                       {{ language.name }}
                       @if (
                         language.code === data.languageCodeSelected &&
-                        data.autoDetectLabel
+                        canDisplayLanguageDetectedName
                       ) {
                         ({{ data.autoDetectLabel }})
                       }
@@ -112,6 +113,8 @@ export type LanguageSelectorModalResult =
 })
 export class LanguageSelectorModal implements AfterViewInit {
   protected readonly data = inject<LanguageSelectorModalData>(DIALOG_DATA);
+  readonly canDisplayLanguageDetectedName =
+    this.data.autoDetectLabel !== AUTO_DETECT_LANGUAGE_NAME;
   readonly #modalRef = inject(MatDialogRef<LanguageSelectorModal>);
 
   readonly searchedText = model('');
