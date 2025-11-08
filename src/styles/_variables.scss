@@ -44,6 +44,8 @@
   --over-text-primary: var(--white);
   --size-base: 16px;
 
+  --dialog-surface: var(--white);
+
   --error-surface: #f8d7da;
   --error-text: #791919;
 
@@ -59,6 +61,7 @@
     --text-secondary: var(--white);
     --shadow-1: var(#0a0d10);
     --over-surface-primary: #2c2f35;
+    --dialog-surface: var(--over-surface-primary);
     --info-surface: #1c2229;
     --info-text: var(--google-light-blue);
     --error-surface: #390005;

@@ -2,6 +2,7 @@
 @use './styles/material.scss';
 @import './styles/tailwind.css';
 
+
 body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
@@ -23,6 +24,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: var(--google-base-font);
@@ -39,11 +41,11 @@ mat-form-field {
 .info-notification {
   --mat-snack-bar-container-color: var(--info-surface);
   --mat-snack-bar-supporting-text-color: var(--info-text);
-    --mat-snack-bar-button-color: var(--info-text)
+  --mat-snack-bar-button-color: var(--info-text);
 }
 
 .error-notification {
   --mat-snack-bar-container-color: var(--error-surface);
   --mat-snack-bar-supporting-text-color: var(--error-text);
-  --mat-snack-bar-button-color: var(--error-text)
+  --mat-snack-bar-button-color: var(--error-text);
 }

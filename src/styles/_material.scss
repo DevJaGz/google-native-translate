@@ -40,6 +40,11 @@ html {
       inactive-label-text-color: var(--text-primary),
     )
   );
+  @include mat.dialog-overrides(
+    (
+      container-color: var(--dialog-surface),
+    )
+  );
 }
 
 .mat-tab-button {
