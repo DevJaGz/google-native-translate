@@ -2,6 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { TranslateTextUsecase } from '@core/use-cases';
 import { Store } from '@ui/store';
 import { scan, Subject, takeUntil, tap } from 'rxjs';
+import { NotificationService } from './notification';
+import { LocalXHelper } from '@shared/helpers';
+import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +12,12 @@ import { scan, Subject, takeUntil, tap } from 'rxjs';
 export class TextTranslationService {
   readonly #store = inject(Store);
   readonly #translateText = inject(TranslateTextUsecase);
+  readonly #notificationService = inject(NotificationService);
+  readonly #localXHelper = inject(LocalXHelper);
   protected readonly translationStore = this.#store.translation;
   protected readonly languageSelectorsStore = this.#store.languageSelectors;
   protected readonly reset$ = new Subject<void>();
+  protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   translate(text: string): void {
     const {
@@ -48,12 +54,12 @@ export class TextTranslationService {
         targetLanguageCode,
         detection: {
           monitor: (event) => {
-            this.handleDetectionProgress(event);
+            this.handleProgressNotification(event, 'Detecting language');
           },
         },
         translation: {
           monitor: (event) => {
-            this.handleTranslationProgress(event);
+            this.handleProgressNotification(event, 'Translating text');
           },
         },
       })
@@ -71,7 +77,7 @@ export class TextTranslationService {
         scan((acc, current) => acc + current.translatedContent(), ''),
         tap({
           next: (translatedText) => {
-              setTranslatedText(translatedText);
+            setTranslatedText(translatedText);
           },
           error: (error) => {
             console.error('Translation error', error);
@@ -85,13 +91,40 @@ export class TextTranslationService {
       .subscribe();
   }
 
-  protected handleDetectionProgress(event: ProgressEvent) {
-    console.log('handleDetectionProgress', event.loaded, event.total);
-    // TODO: handle detection progress
+  protected handleProgressNotification(
+    event: ProgressEvent,
+    contextLabel: string,
+  ) {
+    const { sourceLanguageCodeSelected, targetLanguageCodeSelected } =
+      this.languageSelectorsStore;
+
+    const sourceLanguageCode = sourceLanguageCodeSelected();
+    const targetLanguageCode = targetLanguageCodeSelected();
+
+    const progressMessage = `A model is being downloaded for ${
+      contextLabel
+    } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
+
+    const sourceLanguageName = this.#localXHelper
+      .languageNameIn('en')
+      .of(sourceLanguageCode);
+    const targetLanguageName = this.#localXHelper
+      .languageNameIn('en')
+      .of(targetLanguageCode);
+
+    const doneMessage = `A ${contextLabel} model for "${sourceLanguageName}" to "${targetLanguageName}" has been downloaded successfully.`;
+    const message =
+      event.loaded === event.total ? doneMessage : progressMessage;
+
+    this.notifyProgress(message);
   }
 
-  protected handleTranslationProgress(event: ProgressEvent) {
-    // TODO: handle translation progress
-    console.log('handleTranslationProgress', event.loaded, event.total);
+  protected notifyProgress(message: string): void {
+    if (this.snackbarRef) {
+      this.snackbarRef.dismiss();
+      this.snackbarRef = null;
+    }
+
+    this.snackbarRef = this.#notificationService.info(message);
   }
 }
