@@ -71,8 +71,7 @@ export class TextTranslationService {
           next: (translatedText) => {
             this.#store.patchState({ translatedText });
           },
-          error: (error) => {
-            console.error('Translation error', error);
+          error: () => {
             this.#store.patchState({ isLoading: false });
           },
           complete: () => {
