@@ -30,7 +30,7 @@ type MonitorProgressEvent = {
     MatFormFieldModule,
     MatButtonModule,
     ReactiveFormsModule,
-    FormErrorMessagePipe
+    FormErrorMessagePipe,
   ],
   template: `
     <div
@@ -48,7 +48,11 @@ type MonitorProgressEvent = {
             rows="8"
             placeholder="Write the text you want to translate"></textarea>
         </mat-form-field>
-        <mat-error>{{ sourceTextControl.errors | formErrorMessage }}</mat-error>
+        @if (sourceTextControl.errors) {
+          <mat-error>{{
+            sourceTextControl.errors | formErrorMessage
+          }}</mat-error>
+        }
       </form>
       <output class="text-2xl p-3 bg-google-gray-blue rounded-lg">
         @if (store.isLoading() && store.translatedText() === '') {
