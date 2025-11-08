@@ -1,4 +1,9 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Icon } from '../icon/icon';
@@ -11,17 +16,17 @@ import { Icon } from '../icon/icon';
       matIconButton
       [matTooltip]="tooltipText()"
       [disabled]="isDisabled()"
-      [attr.aria-label]="ariaLabel()"
-    >
+      [attr.aria-label]="ariaLabel()">
       <app-icon><ng-content /></app-icon>
     </button>
   `,
   host: {
     '[style.display]': '"block"',
+    '[style.pointer-events]': "isDisabled() ? 'none' : 'all'",
     '[class.large]': "size() === 'large'",
   },
   styles: `
-   :host > button {
+    :host > button {
       width: calc(var(--size, 40px) * 1px);
       height: calc(var(--size, 40px) * 1px);
       display: grid;
@@ -31,11 +36,11 @@ import { Icon } from '../icon/icon';
       &:disabled {
         opacity: 0.5;
       }
-   }
+    }
 
-   :host.large {
-     --size: 48;
-   }
+    :host.large {
+      --size: 48;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
