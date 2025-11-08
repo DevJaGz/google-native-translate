@@ -20,7 +20,7 @@ export class TextTranslationService {
 
   translate(text: string): void {
     const sourceLanguageCode = this.#store.sourceLanguageCode();
-    const targetLanguageCode = this.#store.targetLanguageName();
+    const targetLanguageCode = this.#store.targetLanguageCode();
     const previousText = this.#store.sourceText();
     const currentText = text.trim();
 
@@ -31,8 +31,6 @@ export class TextTranslationService {
     this.#store.patchState({
       isLoading: true,
       sourceText: currentText,
-      sourceLanguageCode: sourceLanguageCode,
-      targetLanguageCode: targetLanguageCode,
     });
 
     this.reset$.next();
