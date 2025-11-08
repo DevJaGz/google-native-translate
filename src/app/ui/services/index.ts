@@ -4,3 +4,4 @@ export * from './notification';
 export * from './translation-notifications';
 export * from './text-translation';
 export * from './debounced-events';
+export * from './validation-messages';
