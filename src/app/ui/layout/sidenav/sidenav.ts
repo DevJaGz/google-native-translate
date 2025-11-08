@@ -14,16 +14,17 @@ import { Store } from '@ui/store';
             tooltipText="Close Main Menu"
             ariaLabel="Close Main Menu"
             (click)="store.sidenav.setIsOpen(false)"
-            (keydown.enter)="store.sidenav.setIsOpen(false)"
-          >
+            (keydown.enter)="store.sidenav.setIsOpen(false)">
             Close
           </app-icon-button>
         </div>
         <app-logo />
         <p class="mb-4">
-          This is an independent educational project and is not associated with, endorsed by, or
-          sponsored by Google LLC or Google Translate.
+          This is an independent educational project and is not associated with,
+          endorsed by, or sponsored by Google LLC or Google Translate.
         </p>
+      </div>
+      <div class="flex flex-col justify-end my-4 mx-4">
         <div class="flex gap-1 items-center flex-wrap">
           <app-icon>account_circle</app-icon>
           <div class="flex items-center gap-1">
@@ -33,8 +34,7 @@ import { Store } from '@ui/store';
               class="underline"
               href="https://juliangomez.dev"
               target="_blank"
-              rel="noreferrer noopener"
-            >
+              rel="noreferrer noopener">
               juliangomez.dev</a
             >
           </div>
@@ -45,6 +45,7 @@ import { Store } from '@ui/store';
   styles: ``,
   host: {
     '[style.display]': '"block"',
+    '[style.height]': '"100%"',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
