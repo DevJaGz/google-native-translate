@@ -2,10 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { TranslateTextUsecase } from '@core/use-cases';
 import { Store } from '@ui/store';
 import { scan, Subject, takeUntil, tap } from 'rxjs';
-import { NotificationService } from './notification';
-import { LocalXHelper } from '@shared/helpers';
-import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { AUTO_DETECT_LANGUAGE_CODE } from '@ui/constants';
+import { TranslationNotificationsService } from './translation-notifications';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +11,10 @@ import { AUTO_DETECT_LANGUAGE_CODE } from '@ui/constants';
 export class TextTranslationService {
   readonly #store = inject(Store);
   readonly #translateText = inject(TranslateTextUsecase);
-  readonly #notificationService = inject(NotificationService);
-  readonly #localXHelper = inject(LocalXHelper);
+  readonly #translationNotificationsService = inject(
+    TranslationNotificationsService,
+  );
   protected readonly reset$ = new Subject<void>();
-  protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   translate(text: string): void {
     const sourceLanguageCode = this.#store.sourceLanguageCode();
@@ -42,12 +40,16 @@ export class TextTranslationService {
         targetLanguageCode,
         detection: {
           monitor: (event) => {
-            this.handleProgressNotification(event, 'Detecting language');
+            this.#translationNotificationsService.handleDetectorProgressNotification(
+              event,
+            );
           },
         },
         translation: {
           monitor: (event) => {
-            this.handleProgressNotification(event, 'Translating text');
+            this.#translationNotificationsService.handleTranslatorProgressNotification(
+              event,
+            );
           },
         },
       })
@@ -79,44 +81,5 @@ export class TextTranslationService {
         }),
       )
       .subscribe();
-  }
-
-  protected handleProgressNotification(
-    event: ProgressEvent,
-    contextLabel: string,
-  ) {
-    const sourceLanguageCode = this.#store.sourceLanguageCode();
-    const targetLanguageCode = this.#store.targetLanguageCode();
-
-    const progressMessage = `A model is being downloaded for ${
-      contextLabel
-    } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
-
-    const sourceLanguageName = sourceLanguageCode
-      ? this.#localXHelper.languageNameIn('en').of(sourceLanguageCode)
-      : 'Unknown';
-    const targetLanguageName = targetLanguageCode
-      ? this.#localXHelper.languageNameIn('en').of(targetLanguageCode)
-      : 'Unknown';
-
-    const rangeMessage =
-      sourceLanguageCode && targetLanguageCode
-        ? ` for "${sourceLanguageName}" to "${targetLanguageName}"`
-        : '';
-
-    const doneMessage = `A ${contextLabel} model ${rangeMessage} has been downloaded successfully.`;
-    const message =
-      event.loaded === event.total ? doneMessage : progressMessage;
-
-    this.notifyProgress(message);
-  }
-
-  protected notifyProgress(message: string): void {
-    if (this.snackbarRef) {
-      this.snackbarRef.dismiss();
-      this.snackbarRef = null;
-    }
-
-    this.snackbarRef = this.#notificationService.info(message);
   }
 }
