@@ -4,6 +4,7 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
+import { NotificationData } from '@ui/models';
 
 export type NotificationOptions = {
   duration?: number;
@@ -15,10 +16,10 @@ export type ConfigMessage = Prettify<
   } & NotificationOptions
 >;
 
-export type ConfigCustomMessage<C> = Prettify<
+export type ConfigCustomMessage<TComponent, TData extends object> = Prettify<
   {
-    component: Type<C>;
-    data?: string;
+    component: Type<TComponent>;
+    data?: NotificationData<TData>;
   } & NotificationOptions
 >;
 
@@ -39,15 +40,24 @@ export class NotificationService {
   readonly #snackBar = inject(MatSnackBar);
   readonly #options = inject(NOTIFICATION_OPTIONS);
 
+  // TODO: Must be a component
   error(config: ConfigMessage): MatSnackBarRef<TextOnlySnackBar> {
     return this.#snackBar.open(config.message, undefined, {
       duration: config.duration ?? this.#options.duration,
     });
   }
 
-  infoComponent<C>(config: ConfigCustomMessage<C>): MatSnackBarRef<C> {
-    return this.#snackBar.openFromComponent(config.component, {
-      data: config.data,
+  infoComponent<TComponent, TData extends object>(
+    config: ConfigCustomMessage<TComponent, TData>,
+  ): MatSnackBarRef<TComponent> {
+    return this.#snackBar.openFromComponent<
+      TComponent,
+      NotificationData<TData>
+    >(config.component, {
+      data: {
+        severity: 'info',
+        ...config.data,
+      } as NotificationData<TData>,
       duration: config.duration ?? this.#options.duration,
     });
   }
