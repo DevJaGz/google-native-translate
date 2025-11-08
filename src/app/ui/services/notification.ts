@@ -28,7 +28,7 @@ export const NOTIFICATION_OPTIONS = new InjectionToken<NotificationOptions>(
   {
     providedIn: 'root',
     factory: () => ({
-      duration: 500000,
+      duration: 5000,
     }),
   },
 );
