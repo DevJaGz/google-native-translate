@@ -17,7 +17,7 @@ export class ValidationMessagesService {
     if (!first) {
       return '';
     }
-    console.log(first);
+
     const [key, details] = first;
     const template = this.#messages[key as ValidationKey];
     if (!template) {

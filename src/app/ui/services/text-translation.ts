@@ -15,16 +15,27 @@ export class TextTranslationService {
     TranslationNotificationsService,
   );
   protected readonly reset$ = new Subject<void>();
+  protected previousSourceLanguageCode = '';
+  protected previousTargetLanguageCode = '';
 
   translate(text: string): void {
-    const sourceLanguageCode = this.#store.sourceLanguageCode();
+    const currentSourceLanguageCode = this.#store.sourceLanguageCode();
+    const sourceLanguageCode =
+      currentSourceLanguageCode || this.#store.languageDetectedCode();
     const targetLanguageCode = this.#store.targetLanguageCode();
     const previousText = this.#store.sourceText();
     const currentText = text.trim();
 
-    if (currentText === previousText) {
+    if (
+      currentText === previousText &&
+      sourceLanguageCode === this.previousSourceLanguageCode &&
+      targetLanguageCode === this.previousTargetLanguageCode
+    ) {
       return;
     }
+
+    this.previousSourceLanguageCode = sourceLanguageCode;
+    this.previousTargetLanguageCode = targetLanguageCode;
 
     this.#store.patchState({
       isLoading: true,
@@ -60,6 +71,7 @@ export class TextTranslationService {
             this.#store.patchState({
               languageDetectedCode:
                 // When this is true, is because no auto-detect was performed
+                currentSourceLanguageCode &&
                 sourceLanguageCode === translatation.sourceLanguageCode
                   ? AUTO_DETECT_LANGUAGE_CODE
                   : translatation.sourceLanguageCode,

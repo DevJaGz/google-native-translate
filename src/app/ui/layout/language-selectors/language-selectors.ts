@@ -12,7 +12,7 @@ import {
   AUTO_DETECT_LANGUAGE_CODE,
   AUTO_DETECT_LANGUAGE_NAME,
 } from '@ui/constants';
-import { BreakpointService } from '@ui/services';
+import { BreakpointService, TextTranslationService } from '@ui/services';
 import { Store } from '@ui/store';
 
 @Component({
@@ -33,9 +33,7 @@ import { Store } from '@ui/store';
         [handset]="breakpointService.isHandset()"
         [list]="targetLanguageList()"
         [languageCodeSelected]="store.targetLanguageCode()"
-        (languageSelected)="
-          store.patchState({ targetLanguageCode: $event.code })
-        " />
+        (languageSelected)="handleTargetLanguageSelected($event)" />
     </div>
   `,
   styles: ``,
@@ -46,6 +44,7 @@ import { Store } from '@ui/store';
 })
 export class LanguageSelectors {
   readonly #listLanguages = inject(ListLanguagesUsecase);
+  readonly #textTranslationService = inject(TextTranslationService);
   protected readonly store = inject(Store);
   protected readonly breakpointService = inject(BreakpointService);
 
@@ -77,11 +76,33 @@ export class LanguageSelectors {
   });
 
   protected handleSourceLanguageSelected(language: Language) {
-    const isAutoDetect = this.store.isAutoDetect();
+    const sourceLanguageCode = language.code;
+    const hasSourceLanguage = sourceLanguageCode !== AUTO_DETECT_LANGUAGE_CODE;
     const languageDetectedCode = this.store.languageDetectedCode();
+
     this.store.patchState({
-      sourceLanguageCode: language.code,
-      languageDetectedCode: isAutoDetect ? languageDetectedCode : '',
+      sourceLanguageCode,
+      // If the user has selected a language, the auto-detect language is set to its default value (AUTO_DETECT_LANGUAGE_CODE),
+      // otherwise, the auto-detect language is set to the current detected language
+      languageDetectedCode: hasSourceLanguage ? AUTO_DETECT_LANGUAGE_CODE : languageDetectedCode,
     });
+
+    this.translate();
+  }
+
+  protected handleTargetLanguageSelected(language: Language) {
+    const targetLanguageCode = language.code;
+
+    this.store.patchState({
+      targetLanguageCode,
+    });
+
+    this.translate();
+  }
+
+  protected translate() {
+    const sourceText = this.store.sourceText();
+    if (!sourceText) return;
+    this.#textTranslationService.translate(sourceText);
   }
 }

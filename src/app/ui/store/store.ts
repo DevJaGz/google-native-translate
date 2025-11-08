@@ -42,6 +42,7 @@ export const INITIAL_STATE = new InjectionToken<State>('Initial State', {
   factory: () => initialState,
 });
 
+// TODO: Delete other stores
 export const Store = signalStore(
   { providedIn: 'root' },
   withState<State>(() => inject(INITIAL_STATE)),
