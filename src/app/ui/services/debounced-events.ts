@@ -1,5 +1,4 @@
 import {
-    ListenerOptions,
     makeEnvironmentProviders
 } from '@angular/core';
 import {
