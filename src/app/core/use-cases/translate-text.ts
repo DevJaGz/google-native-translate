@@ -12,7 +12,7 @@ import {
   MonitorProgressOption,
   StreamedOption,
 } from '@shared/models';
-import { map, Observable, of, scan, switchMap, throwError } from 'rxjs';
+import { map, Observable, of, switchMap, throwError } from 'rxjs';
 
 export type TranslateTextRequestOptions = Prettify<
   AbortOperationOption & MonitorProgressOption

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateTextUsecase } from '@core/use-cases';
 import { Store } from '@ui/store';
 import { scan, Subject, takeUntil, tap } from 'rxjs';
