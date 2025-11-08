@@ -27,3 +27,11 @@ body {
   margin: 0;
   font-family: var(--google-base-font);
 }
+
+mat-form-field {
+  *,
+  ::before,
+  ::after {
+    border-style: none;
+  }
+}

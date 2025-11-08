@@ -37,7 +37,7 @@ type MonitorProgressEvent = {
   ],
   template: `
     <form>
-      <mat-form-field class="w-full max-w-xl min-h-48">
+      <mat-form-field class="w-full max-w-xl min-h-48" appearance="outline">
         <mat-label>Leave a comment</mat-label>
         <textarea
           #sourceTextControlRef

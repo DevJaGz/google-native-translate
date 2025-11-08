@@ -73,6 +73,7 @@ export class LanguageSelector {
       >(LanguageSelectorModal, {
         width: '95svw',
         maxWidth: '1200px',
+        height: '80vh',
         autoFocus: false,
         data: {
           languages: this.list(),
