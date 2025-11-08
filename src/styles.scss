@@ -35,3 +35,8 @@ mat-form-field {
     border-style: none;
   }
 }
+
+.info-notification {
+  --mat-snack-bar-container-color: var(--info-surface) !important;
+  --mat-snack-bar-supporting-text-color: var(--info-text) !important;
+}

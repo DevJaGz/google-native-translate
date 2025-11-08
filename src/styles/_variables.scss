@@ -5,15 +5,16 @@
   --google-yellow: #fbbc05;
   --google-green: #34a853;
 
-  --google-base-font: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --google-product-font: "Product Sans",Arial,sans-serif;
+  --google-base-font: 'Google Sans', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+  --google-product-font: 'Product Sans', Arial, sans-serif;
 
   --google-light-blue: #f8fafd;
   --google-gray-blue: #f5f5f5;
   --google-pale-blue: #e9eef6;
   --google-sky-blue: #1a73e8;
-  --google-soft-gray:#dadce0;
+  --google-soft-gray: #dadce0;
   --google-dark-gray: #3c4043;
   --google-darker-gray: #3c4043e6;
   --google-gray: #757575;
@@ -30,7 +31,8 @@
   --google-black-8a: #0000008a;
   --google-black-0a: #0000000a;
 
-  --base-font: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --base-font: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Arial, sans-serif;
   --white: #ffffff;
   --black: #000000;
   --text-primary: #606469;
@@ -41,6 +43,11 @@
   --over-surface-primary: #44474e;
   --over-text-primary: var(--white);
   --size-base: 16px;
+
+  --error-surface: #f8d7da;
+  --error-text: #b71c1c;
+  --info-surface: var(--white);
+  --info-text: var(--google-deep-black);
 }
 
 /* Dark color theme */
@@ -49,7 +56,9 @@
     --surface-primary: #1b1c1d;
     --text-primary: #c8cfd1;
     --text-secondary: var(--white);
-    --shadow-1:  var(--black);
+    --shadow-1: var(#0a0d10);
     --over-surface-primary: #2c2f35;
+    --info-surface: #1c2229;
+    --info-text: var(--google-light-blue);
   }
 }

@@ -15,7 +15,7 @@ export type ProgressNotificationData = NotificationData<{
 @Component({
   selector: 'app-progress-notification',
   imports: [],
-  template: `<p>{{ data.message() }}</p>`,
+  template: `<p>{{ data.message() }}</p> `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

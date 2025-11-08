@@ -28,7 +28,7 @@ export const NOTIFICATION_OPTIONS = new InjectionToken<NotificationOptions>(
   {
     providedIn: 'root',
     factory: () => ({
-      duration: 5000,
+      duration: 500000,
     }),
   },
 );
@@ -59,6 +59,7 @@ export class NotificationService {
         ...config.data,
       } as NotificationData<TData>,
       duration: config.duration ?? this.#options.duration,
+      panelClass: ['info-notification'],
     });
   }
 }
