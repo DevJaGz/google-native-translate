@@ -32,7 +32,7 @@ import { Store } from '@ui/store';
       <mat-drawer-content>
         <app-header />
         <main class="max-w-7xl mx-auto px-4">
-          <!-- <app-operation-mode class="mt-3 sm:mt-4" /> -->
+          <app-operation-mode class="mt-3 sm:mt-4" />
           <app-language-selectors class="mt-4" />
           <router-outlet />
           <div class="flex justify-end">

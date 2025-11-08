@@ -105,14 +105,16 @@ export class TextTranslationService {
       contextLabel
     } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
 
-    const sourceLanguageName = this.#localXHelper
-      .languageNameIn('en')
-      .of(sourceLanguageCode);
-    const targetLanguageName = this.#localXHelper
-      .languageNameIn('en')
-      .of(targetLanguageCode);
+    const sourceLanguageName = sourceLanguageCode
+      ? this.#localXHelper.languageNameIn('en').of(sourceLanguageCode)
+      : 'Unknown';
+    const targetLanguageName = targetLanguageCode
+      ? this.#localXHelper.languageNameIn('en').of(targetLanguageCode)
+      : 'Unknown';
 
-    const doneMessage = `A ${contextLabel} model for "${sourceLanguageName}" to "${targetLanguageName}" has been downloaded successfully.`;
+    const rangeMessage = sourceLanguageCode && targetLanguageCode ? ` for "${sourceLanguageName}" to "${targetLanguageName}"` : '';
+
+    const doneMessage = `A ${contextLabel} model ${rangeMessage} has been downloaded successfully.`;
     const message =
       event.loaded === event.total ? doneMessage : progressMessage;
 
