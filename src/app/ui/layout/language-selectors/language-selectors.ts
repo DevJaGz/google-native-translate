@@ -26,8 +26,11 @@ import { Store } from '@ui/store';
         [languageCodeSelected]="store.sourceLanguageCode()"
         [languageDetectedName]="store.languageDetectedName()"
         (languageSelected)="handleSourceLanguageSelected($event)" />
-      <app-icon-button [isDisabled]="store.isAutoDetect()"
-        >swap_horiz</app-icon-button
+      <app-icon-button
+        [isDisabled]="store.isAutoDetect()"
+        (click)="handleSwapLangauges()"
+        (keydown.enter)="handleSwapLangauges()">
+        swap_horiz</app-icon-button
       >
       <app-language-selector
         [handset]="breakpointService.isHandset()"
@@ -75,7 +78,7 @@ export class LanguageSelectors {
     );
   });
 
-  protected handleSourceLanguageSelected(language: Language) {
+  protected handleSourceLanguageSelected(language: Language): void {
     const sourceLanguageCode = language.code;
     const hasSourceLanguage = sourceLanguageCode !== AUTO_DETECT_LANGUAGE_CODE;
     const languageDetectedCode = this.store.languageDetectedCode();
@@ -84,13 +87,15 @@ export class LanguageSelectors {
       sourceLanguageCode,
       // If the user has selected a language, the auto-detect language is set to its default value (AUTO_DETECT_LANGUAGE_CODE),
       // otherwise, the auto-detect language is set to the current detected language
-      languageDetectedCode: hasSourceLanguage ? AUTO_DETECT_LANGUAGE_CODE : languageDetectedCode,
+      languageDetectedCode: hasSourceLanguage
+        ? AUTO_DETECT_LANGUAGE_CODE
+        : languageDetectedCode,
     });
 
     this.translate();
   }
 
-  protected handleTargetLanguageSelected(language: Language) {
+  protected handleTargetLanguageSelected(language: Language): void {
     const targetLanguageCode = language.code;
 
     this.store.patchState({
@@ -100,7 +105,16 @@ export class LanguageSelectors {
     this.translate();
   }
 
-  protected translate() {
+  protected handleSwapLangauges(): void {
+    this.store.patchState({
+      sourceLanguageCode: this.store.targetLanguageCode(),
+      targetLanguageCode: this.store.sourceLanguageCode(),
+      sourceText: this.store.translatedText(),
+      translatedText: this.store.sourceText(),
+    })
+  }
+
+  protected translate(): void {
     const sourceText = this.store.sourceText();
     if (!sourceText) return;
     this.#textTranslationService.translate(sourceText);

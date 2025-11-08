@@ -46,5 +46,14 @@ export class FormService {
       }
       this.sourceTextControl.updateValueAndValidity();
     });
+
+    effect(() => {
+      const sourceText = this.#store.sourceText();
+      const controlText = this.sourceTextControl.value;
+      if (sourceText === controlText) {
+        return;
+      }
+      this.sourceTextControl.setValue(sourceText, { emitEvent: false, onlySelf: true });
+    });
   }
 }
