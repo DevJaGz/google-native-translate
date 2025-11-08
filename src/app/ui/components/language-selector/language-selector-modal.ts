@@ -47,9 +47,10 @@ export type LanguageSelectorModalResult =
           appearance="outline">
           <mat-label>Search for a language</mat-label>
           <input
+            id="language-selector-search"
             name="filter"
             type="text"
-            placeholder="Ex. English"
+            placeholder="Write a language name"
             aria-label="Number"
             matInput
             [(ngModel)]="searchedText" />
@@ -126,7 +127,7 @@ export class LanguageSelectorModal implements AfterViewInit {
   });
 
   ngAfterViewInit(): void {
-    (document.querySelector('[data-selected]') as HTMLElement)?.focus();
+    (document.getElementById('language-selector-search') as HTMLElement)?.focus();
   }
 
   handleLanguageSelect(language: Language) {
