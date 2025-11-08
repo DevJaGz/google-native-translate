@@ -8,10 +8,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import {
-  MAT_FORM_FIELD_DEFAULT_OPTIONS,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
 import { LocalXHelper } from '@shared/helpers';
@@ -24,6 +21,7 @@ import { TranslationText } from '@core/models';
 import { FormService } from './form';
 import { TextTranslationService } from '@ui/services';
 import { AUTO_DETECT_LANGUAGE_CODE } from '@ui/constants';
+import { FormErrorMessagePipe } from '@ui/pipes';
 
 type MonitorProgressEvent = {
   type: 'detector' | 'translator';
@@ -38,6 +36,7 @@ type MonitorProgressEvent = {
     MatFormFieldModule,
     MatButtonModule,
     ReactiveFormsModule,
+    FormErrorMessagePipe
   ],
   template: `
     <div
@@ -55,7 +54,7 @@ type MonitorProgressEvent = {
             rows="8"
             placeholder="Write the text you want to translate"></textarea>
         </mat-form-field>
-        <mat-error>Error</mat-error>
+        <mat-error>{{ sourceTextControl.errors | formErrorMessage }}</mat-error>
       </form>
       <output class="text-2xl p-3 bg-google-gray-blue rounded-lg">
         @if (store.isLoading() && store.translatedText() === '') {
@@ -69,15 +68,7 @@ type MonitorProgressEvent = {
     </div>
   `,
   styles: ``,
-  providers: [
-    FormService,
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: {
-        subscriptSizing: 'dynamic',
-      },
-    },
-  ],
+  providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextTranslation {

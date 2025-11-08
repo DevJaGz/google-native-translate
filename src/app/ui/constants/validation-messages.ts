@@ -7,8 +7,8 @@ export const enum ValidationKey {
 }
 
 export type ValidationDetails = {
-  [ValidationKey.MAX_LENGTH]: { maxLength: number };
-  [ValidationKey.MIN_LENGTH]: { minLength: number };
+  [ValidationKey.MAX_LENGTH]: { requiredLength: number };
+  [ValidationKey.MIN_LENGTH]: { requiredLength: number };
 };
 
 export type ValidationMessage<TKey> = TKey extends keyof ValidationDetails
@@ -26,9 +26,9 @@ export const VALIDATION_MESSAGES = new InjectionToken<ValidationMessages>(
     factory: () => ({
       [ValidationKey.REQUIRED]: 'This field is required',
       [ValidationKey.MIN_LENGTH]: (data) =>
-        `This field must be at least ${data.minLength} characters long`,
+        `This field must be at least ${data.requiredLength} characters long`,
       [ValidationKey.MAX_LENGTH]: (data) =>
-        `This field must be at most ${data.maxLength} characters long`,
+        `This field must be at most ${data.requiredLength} characters long`,
     }),
   },
 );
