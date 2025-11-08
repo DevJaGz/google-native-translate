@@ -11,11 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
-import { LocalXHelper } from '@shared/helpers';
 import {
-  MatSnackBar,
   MatSnackBarRef,
-  TextOnlySnackBar,
+  TextOnlySnackBar
 } from '@angular/material/snack-bar';
 import { TranslationText } from '@core/models';
 import { FormService } from './form';
@@ -74,8 +72,6 @@ type MonitorProgressEvent = {
 export class TextTranslation {
   readonly #textTranslationService = inject(TextTranslationService);
   readonly #formService = inject(FormService);
-  readonly #localXHelper = inject(LocalXHelper);
-  readonly #snackBar = inject(MatSnackBar);
   protected readonly store = inject(Store);
 
   protected readonly sourceTextControlRef = viewChild.required<
@@ -108,38 +104,6 @@ export class TextTranslation {
       return;
     }
     this.#textTranslationService.translate(this.sourceTextControl.value);
-  }
-
-  protected notifyProgress(event: MonitorProgressEvent) {
-    const sourceLanguageCode = this.store.sourceLanguageCode();
-    const targetLanguageCode = this.store.targetLanguageCode();
-
-    const contextLabel =
-      event.type === 'detector' ? 'Detecting language' : 'Translating text';
-    const progressMessage = `A model is being downloaded for ${
-      contextLabel
-    } (${Math.floor((event.loaded / event.total) * 100)}%), please wait...`;
-
-    const sourceLanguageName = this.#localXHelper
-      .languageNameIn('en')
-      .of(sourceLanguageCode);
-    const targetLanguageName = this.#localXHelper
-      .languageNameIn('en')
-      .of(targetLanguageCode);
-    const doneMessage = `A ${contextLabel} model for "${sourceLanguageName}" to "${targetLanguageName}" has been downloaded successfully.`;
-    const message =
-      event.loaded === event.total ? doneMessage : progressMessage;
-    this.displayMessageToUser(message);
-  }
-
-  protected displayMessageToUser(message: string): void {
-    if (this.snackbarRef) {
-      this.snackbarRef.dismiss();
-      this.snackbarRef = null;
-    }
-    this.snackbarRef = this.#snackBar.open(message, undefined, {
-      duration: 5000,
-    });
   }
 
   protected handleLanguageDetectionLabel(
