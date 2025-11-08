@@ -37,6 +37,11 @@ mat-form-field {
 }
 
 .info-notification {
-  --mat-snack-bar-container-color: var(--info-surface) !important;
-  --mat-snack-bar-supporting-text-color: var(--info-text) !important;
+  --mat-snack-bar-container-color: var(--info-surface);
+  --mat-snack-bar-supporting-text-color: var(--info-text);
+}
+
+.error-notification {
+  --mat-snack-bar-container-color: var(--error-surface);
+  --mat-snack-bar-supporting-text-color: var(--error-text);
 }

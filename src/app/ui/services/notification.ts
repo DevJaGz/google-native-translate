@@ -40,10 +40,10 @@ export class NotificationService {
   readonly #snackBar = inject(MatSnackBar);
   readonly #options = inject(NOTIFICATION_OPTIONS);
 
-  // TODO: Must be a component
   error(config: ConfigMessage): MatSnackBarRef<TextOnlySnackBar> {
     return this.#snackBar.open(config.message, undefined, {
       duration: config.duration ?? this.#options.duration,
+      panelClass: ['error-notification'],
     });
   }
 
