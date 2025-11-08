@@ -36,18 +36,22 @@ type MonitorProgressEvent = {
     ReactiveFormsModule,
   ],
   template: `
-    <form>
-      <mat-form-field class="w-full max-w-xl min-h-48" appearance="outline">
-        <mat-label>Leave a comment</mat-label>
-        <textarea
-          #sourceTextControlRef
-          matInput
-          [formControl]="sourceTextControl"
-          (input.debounce.400ms)="translate()"
-          rows="8"
-          placeholder="Ex. It makes me feel..."></textarea>
-      </mat-form-field>
-      <output class="text-2xl p-2 outline outline-primary block rounded">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-4">
+      <form>
+        <mat-form-field
+          class="w-full max-w-xl min-h-48"
+          appearance="outline">
+          <mat-label>Leave a comment</mat-label>
+          <textarea
+            #sourceTextControlRef
+            matInput
+            [formControl]="sourceTextControl"
+            (input.debounce.400ms)="translate()"
+            rows="8"
+            placeholder="Ex. It makes me feel..."></textarea>
+        </mat-form-field>
+      </form>
+      <output class="text-2xl p-2">
         @if (
           translationStore.isLoading() &&
           translationStore.translatedText() === ''
@@ -59,7 +63,7 @@ type MonitorProgressEvent = {
           {{ translationStore.translatedText() }}
         }
       </output>
-    </form>
+    </div>
   `,
   styles: ``,
   providers: [FormService],
