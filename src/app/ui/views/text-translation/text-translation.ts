@@ -11,10 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
-import {
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
 import { TranslationText } from '@core/models';
 import { FormService } from './form';
 import { TextTranslationService } from '@ui/services';
@@ -80,16 +76,11 @@ export class TextTranslation {
 
   protected readonly sourceTextControl = this.#formService.sourceTextControl;
 
-  protected snackbarRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
-
   constructor() {
     effect(() => {
       const isLoading = this.store.isLoading();
       const sourceElement = this.sourceTextControlRef().nativeElement;
-      if (isLoading) {
-        this.sourceTextControl.disable();
-      } else {
-        this.sourceTextControl.enable();
+      if (!isLoading) {
         sourceElement.focus();
       }
     });
