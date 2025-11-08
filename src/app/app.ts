@@ -35,7 +35,7 @@ import { Store } from '@ui/store';
           <app-operation-mode class="mt-3 sm:mt-4" />
           <app-language-selectors class="mt-4" />
           <router-outlet />
-          <div class="flex justify-end">
+          <div class="flex justify-end mt-8">
             <a
               matTooltip="Open in new tab"
               class="italic hover:underline transition-transform cursor-pointer text-xs"

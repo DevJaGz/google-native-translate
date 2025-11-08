@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ui/store';
 import { LocalXHelper } from '@shared/helpers';
@@ -43,17 +46,18 @@ type MonitorProgressEvent = {
         <mat-form-field
           class="w-full max-w-xl min-h-48"
           appearance="outline">
-          <mat-label>Leave a comment</mat-label>
+          <mat-label>Text</mat-label>
           <textarea
             #sourceTextControlRef
             matInput
             [formControl]="sourceTextControl"
             (input.debounce.400ms)="translate()"
             rows="8"
-            placeholder="Ex. It makes me feel..."></textarea>
+            placeholder="Write the text you want to translate"></textarea>
         </mat-form-field>
+        <mat-error>Error</mat-error>
       </form>
-      <output class="text-2xl p-2">
+      <output class="text-2xl p-2 bg-google-gray-blue rounded-lg">
         @if (store.isLoading() && store.translatedText() === '') {
           Translating...
         } @else if (store.translatedText() === '') {
@@ -65,7 +69,15 @@ type MonitorProgressEvent = {
     </div>
   `,
   styles: ``,
-  providers: [FormService],
+  providers: [
+    FormService,
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: {
+        subscriptSizing: 'dynamic',
+      },
+    },
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextTranslation {
