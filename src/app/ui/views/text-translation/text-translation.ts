@@ -57,7 +57,7 @@ type MonitorProgressEvent = {
         </mat-form-field>
         <mat-error>Error</mat-error>
       </form>
-      <output class="text-2xl p-2 bg-google-gray-blue rounded-lg">
+      <output class="text-2xl p-3 bg-google-gray-blue rounded-lg">
         @if (store.isLoading() && store.translatedText() === '') {
           Translating...
         } @else if (store.translatedText() === '') {

@@ -39,9 +39,11 @@ mat-form-field {
 .info-notification {
   --mat-snack-bar-container-color: var(--info-surface);
   --mat-snack-bar-supporting-text-color: var(--info-text);
+    --mat-snack-bar-button-color: var(--info-text)
 }
 
 .error-notification {
   --mat-snack-bar-container-color: var(--error-surface);
   --mat-snack-bar-supporting-text-color: var(--error-text);
+  --mat-snack-bar-button-color: var(--error-text)
 }

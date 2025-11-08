@@ -13,6 +13,7 @@ export type NotificationOptions = {
 export type ConfigMessage = Prettify<
   {
     message: string;
+    controlLabel?: 'Close';
   } & NotificationOptions
 >;
 
@@ -41,7 +42,7 @@ export class NotificationService {
   readonly #options = inject(NOTIFICATION_OPTIONS);
 
   error(config: ConfigMessage): MatSnackBarRef<TextOnlySnackBar> {
-    return this.#snackBar.open(config.message, undefined, {
+    return this.#snackBar.open(config.message, config.controlLabel ?? 'Close', {
       duration: config.duration ?? this.#options.duration,
       panelClass: ['error-notification'],
     });

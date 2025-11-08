@@ -45,7 +45,8 @@
   --size-base: 16px;
 
   --error-surface: #f8d7da;
-  --error-text: #b71c1c;
+  --error-text: #791919;
+
   --info-surface: var(--white);
   --info-text: var(--google-deep-black);
 }
@@ -60,5 +61,8 @@
     --over-surface-primary: #2c2f35;
     --info-surface: #1c2229;
     --info-text: var(--google-light-blue);
+    --error-surface: #390005;
+    --error-text: #e9d6d6;
+    --google-gray-blue: var(--info-surface);
   }
 }
