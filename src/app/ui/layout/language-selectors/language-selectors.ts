@@ -22,18 +22,20 @@ import { Store } from '@ui/store';
     <div class="flex items-center gap-2 h-12 justify-center">
       <app-language-selector
         [handset]="breakpointService.isHandset()"
+        [isDisabled]="store.isLoading()"
         [list]="sourceLanguageList()"
         [languageCodeSelected]="store.sourceLanguageCode()"
         [languageDetectedName]="store.languageDetectedName()"
         (languageSelected)="handleSourceLanguageSelected($event)" />
       <app-icon-button
-        [isDisabled]="store.isAutoDetect()"
+        [isDisabled]="store.isAutoDetect() || store.isLoading()"
         (click)="handleSwapLangauges()"
         (keydown.enter)="handleSwapLangauges()">
         swap_horiz</app-icon-button
       >
       <app-language-selector
         [handset]="breakpointService.isHandset()"
+        [isDisabled]="store.isLoading()"
         [list]="targetLanguageList()"
         [languageCodeSelected]="store.targetLanguageCode()"
         (languageSelected)="handleTargetLanguageSelected($event)" />
@@ -111,7 +113,7 @@ export class LanguageSelectors {
       targetLanguageCode: this.store.sourceLanguageCode(),
       sourceText: this.store.translatedText(),
       translatedText: this.store.sourceText(),
-    })
+    });
   }
 
   protected translate(): void {

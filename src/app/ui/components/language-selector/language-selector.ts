@@ -26,6 +26,7 @@ import {
   template: `
     <button
       matButton
+      [disabled]="isDisabled()"
       class="text-google-sky-blue! rounded-sm!"
       (click)="handleSelection()"
       (keydown.enter)="handleSelection()">
@@ -35,11 +36,17 @@ import {
       }
     </button>
   `,
-  styles: ``,
+  styles: `
+    :host button:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguageSelector {
   readonly list = input<Language[]>([]);
+  readonly isDisabled = input<boolean>(false);
   readonly languageCodeSelected = input<string>('');
   readonly handset = input<boolean>(false);
   readonly autoDetectCode = input<string>(AUTO_DETECT_LANGUAGE_CODE);
