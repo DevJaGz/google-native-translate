@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-import {
-  from,
-  map,
-  Observable,
-  of, switchMap
-} from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import {
   LanguageDetectorPort,
   LanguageDetectorRequest,
   LanguageDetectorResult,
 } from '@core/ports';
-import { BrowserTranslationApi } from './browser-translation-api';
+import {
+  BrowserApiAvailability,
+  BrowserTranslationApi,
+} from './browser-translation-api';
 import { AppError, ErrorType } from '@core/models';
 
 @Injectable({
@@ -48,10 +46,8 @@ export class BrowserLanguageDetector
     return of('LanguageDetector' in self);
   }
 
-  protected isAvailable(): Observable<boolean> {
-    return from(LanguageDetector.availability()).pipe(
-      map((result) => result === 'available'),
-    );
+  protected availability(): Observable<BrowserApiAvailability> {
+    return from(LanguageDetector.availability());
   }
 
   protected createSession(
@@ -76,13 +72,7 @@ export class BrowserLanguageDetector
     return hasSameSignature;
   }
 
-  protected isOperationSupported(): Observable<boolean> {
-    return from(LanguageDetector.availability()).pipe(
-      map((result) => result !== 'unavailable'),
-    );
-  }
-
-  protected operationNotSupportedError(): AppError {
+  protected notSupportedError(): AppError {
     return AppError.create({
       type: ErrorType.LANGUAGE_DETECTION_NOT_SUPPORTED,
     });

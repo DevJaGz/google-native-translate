@@ -23,6 +23,8 @@ export type BaseApiRequest = {
   };
 };
 
+export type BrowserApiAvailability = 'available' | 'unavailable' | 'downloadable' | 'downloading';
+
 /**
  * This class is a base class for all Translation APIs.
  * It provides a common logic to work with APIs in the browser.
@@ -44,15 +46,6 @@ export abstract class BrowserTranslationApi<
     request?: Partial<TRequest>,
   ): Observable<boolean>;
 
-  /**
-   * In this method must include the logic to check if the API
-   * is available to be used in the current browser.
-   *
-   * @param request  - Parameters required by the API.
-   */
-  protected abstract isAvailable(
-    request?: Partial<TRequest>,
-  ): Observable<boolean>;
 
   /**
    * In this method must include the logic to create the API session.
@@ -78,10 +71,10 @@ export abstract class BrowserTranslationApi<
    *
    * @param request - Parameters required by the API.
    */
-  protected abstract isOperationSupported(
+  protected abstract availability(
     request?: Partial<TRequest>,
-  ): Observable<boolean>;
-  protected abstract operationNotSupportedError(): AppError;
+  ): Observable<BrowserApiAvailability>;
+  protected abstract notSupportedError(): AppError;
 
   /**
    *  Session created.
@@ -121,17 +114,16 @@ export abstract class BrowserTranslationApi<
 
     this.destroySession();
 
-    return this.isOperationSupported(request).pipe(
-      switchMap((isOperationSupported) =>
-        isOperationSupported
-          ? this.isAvailable(request)
-          : throwError(() => this.operationNotSupportedError()),
-      ),
-      switchMap((isAvailable) =>
-        isAvailable
-          ? this.createSession(request)
-          : this.createAndMonitorSession(request),
-      ),
+    return this.availability(request).pipe(
+      switchMap((availability) => {
+        if (availability === 'unavailable') {
+          return throwError(() => this.notSupportedError());
+        }
+        if (availability === 'downloadable' || availability === 'downloading') {
+          return this.downloadSession(request);
+        }
+        return this.createSession(request);
+      }),
       tap((session) => {
         this.session = session;
       }),
@@ -145,7 +137,7 @@ export abstract class BrowserTranslationApi<
    * @param request - Parameters required by the API.
    * @returns - Session created.
    */
-  private createAndMonitorSession(request: TRequest): Observable<TApiSession> {
+  private downloadSession(request: TRequest): Observable<TApiSession> {
     const progress$ = new Subject<ProgressEvent>();
 
     const monitor = (event: EventTarget) => {

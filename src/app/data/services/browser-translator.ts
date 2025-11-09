@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { from, Observable, of, switchMap, tap } from 'rxjs';
 import { TextTranslatorRequest, TextTranslatorPort } from '@core/ports';
-import { BrowserTranslationApi } from './browser-translation-api';
+import { BrowserApiAvailability, BrowserTranslationApi } from './browser-translation-api';
 import { SupportLangauges } from '@shared/models';
 import { AppError, ErrorType } from '@core/models';
 import { ReadableStreamHelper } from '@shared/helpers';
@@ -65,13 +65,13 @@ export class BrowserTranslator
     );
   }
 
-  protected isAvailable(request: SupportLangauges): Observable<boolean> {
+  protected availability(request: SupportLangauges): Observable<BrowserApiAvailability> {
     return from(
       Translator.availability({
         sourceLanguage: request.sourceLanguageCode,
         targetLanguage: request.targetLanguageCode,
       }),
-    ).pipe(map((result) => result === 'available'));
+    )
   }
 
   protected createSession(
@@ -88,18 +88,7 @@ export class BrowserTranslator
     );
   }
 
-  protected isOperationSupported(
-    request: SupportLangauges,
-  ): Observable<boolean> {
-    return from(
-      Translator.availability({
-        sourceLanguage: request.sourceLanguageCode,
-        targetLanguage: request.targetLanguageCode,
-      }),
-    ).pipe(map((result) => result !== 'unavailable'));
-  }
-
-  protected operationNotSupportedError(): AppError {
+  protected notSupportedError(): AppError {
     return AppError.create({
       type: ErrorType.TEXT_TRANSLATION_NOT_SUPPORTED,
     });
