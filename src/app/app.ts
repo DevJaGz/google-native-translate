@@ -7,6 +7,8 @@ import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
 import { CheckSupportUsecase } from '@core/use-cases';
 import { tap } from 'rxjs';
+import { SupportedBrowsersMessage } from '@ui/components';
+import { SUPPORTED_BROWSERS } from '@core/constants';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,7 @@ import { tap } from 'rxjs';
     OperationMode,
     LanguageSelectors,
     MatTooltip,
+    SupportedBrowsersMessage,
   ],
   template: `
     <mat-drawer-container
@@ -32,6 +35,10 @@ import { tap } from 'rxjs';
       <mat-drawer-content>
         <app-header />
         <main class="max-w-7xl mx-auto px-4">
+          @if (!store.hasBrowserSupport()) {
+            <app-supported-browsers-message
+              [supportedBrowsers]="supportedBrowsers" />
+          }
           <app-operation-mode class="mt-3 sm:mt-4" />
           <app-language-selectors class="mt-4" />
           <router-outlet />
@@ -54,6 +61,7 @@ import { tap } from 'rxjs';
 })
 export class App {
   readonly #checkSupportUsecase = inject(CheckSupportUsecase);
+  protected readonly supportedBrowsers = inject(SUPPORTED_BROWSERS);
   protected readonly store = inject(Store);
 
   constructor() {
@@ -63,7 +71,7 @@ export class App {
         tap({
           next: (hasSupport) => {
             if (!hasSupport) {
-              console.log('**Browser not supported** SET IN STORE');
+              this.store.patchState({ hasBrowserSupport: false });
             }
           },
         }),

@@ -23,6 +23,7 @@ export type State = {
   targetLanguageCode: string;
   languageDetectedCode: string;
   isLoading: boolean;
+  hasBrowserSupport: boolean;
 };
 
 export const initialState: State = {
@@ -35,6 +36,7 @@ export const initialState: State = {
   targetLanguageCode: 'en',
   languageDetectedCode: AUTO_DETECT_LANGUAGE_CODE,
   isLoading: false,
+  hasBrowserSupport: true,
 };
 
 export const INITIAL_STATE = new InjectionToken<State>('Initial State', {
@@ -42,7 +44,6 @@ export const INITIAL_STATE = new InjectionToken<State>('Initial State', {
   factory: () => initialState,
 });
 
-// TODO: Delete other stores
 export const Store = signalStore(
   { providedIn: 'root' },
   withState<State>(() => inject(INITIAL_STATE)),

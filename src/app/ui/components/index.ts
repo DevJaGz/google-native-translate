@@ -4,3 +4,4 @@ export * from './logo/logo';
 export * from './tab-button/tab-button';
 export * from './language-selector/language-selector';
 export * from './progress-notification/progress-notification';
+export * from './supported-browsers-message/supported-browsers-message';
