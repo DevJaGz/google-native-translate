@@ -20,13 +20,11 @@ import { Store } from '@ui/store';
   template: `
     <mat-drawer-container
       autosize
-      class="h-full [&>.mat-drawer-backdrop]:bg-transparent! bg-surface-primary! text-primary!"
-    >
+      class="h-full [&>.mat-drawer-backdrop]:bg-transparent! bg-surface-primary! text-primary!">
       <mat-drawer
         mode="over"
         [opened]="store.sidenav.isOpen()"
-        (closed)="store.patchState({ sidenav: { isOpen: false } })"
-      >
+        (closed)="store.patchState({ sidenav: { isOpen: false } })">
         <app-sidenav />
       </mat-drawer>
       <mat-drawer-content>

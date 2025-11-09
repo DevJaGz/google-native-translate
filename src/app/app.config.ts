@@ -9,9 +9,10 @@ import {
   provideLanguages,
   provideLanguageDetector,
   provideTextTranslator,
+  provideBrowserDetector,
 } from '@core/ports';
 import { InMemoryLanguagesRepository } from '@data/repositories';
-import { BrowserLanguageDetector, BrowserTranslator } from '@data/services';
+import { BrowserDetector, BrowserLanguageDetector, BrowserTranslator } from '@data/services';
 import { provideCustomErrors, provideDebouncedEvents } from '@ui/services';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
@@ -21,10 +22,11 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideCustomErrors(),
+    provideDebouncedEvents(),
     provideLanguages(InMemoryLanguagesRepository),
     provideLanguageDetector(BrowserLanguageDetector),
     provideTextTranslator(BrowserTranslator),
-    provideDebouncedEvents(),
+    provideBrowserDetector(BrowserDetector),
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: {

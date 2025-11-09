@@ -20,5 +20,6 @@ export const ERROR_MESSAGES = new InjectionToken<Record<ErrorType, string>>('', 
       'The provided text is too short to be translated.',
     [ErrorType.TEXT_TRANSLATION_NOT_SUPPORTED]:
       'Sorry, the translation model is not supported by your browser.',
+    [ErrorType.BROWSER_NOT_SUPPORTED]: 'Sorry, your browser is not supported.',
   }),
 });

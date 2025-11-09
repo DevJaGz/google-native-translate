@@ -12,6 +12,13 @@ declare global {
     Translator: typeof Translator;
   }
 
+  interface Navigator {
+    userAgentData?: {
+      readonly brands: { brand: string; version: string }[];
+      readonly mobile: boolean;
+    };
+  }
+
   /**
    * Experimental LanguageDetector API
    * https://developer.mozilla.org/docs/Web/API/LanguageDetector
@@ -33,7 +40,7 @@ declare global {
 
     detect(
       input: string,
-      options?: { signal?: AbortSignal }
+      options?: { signal?: AbortSignal },
     ): Promise<{ detectedLanguage: string; confidence: number }[]>;
   }
 
@@ -56,11 +63,14 @@ declare global {
 
     destroy(): void;
 
-    translate(input: string, options?: { signal?: AbortSignal }): Promise<string>;
+    translate(
+      input: string,
+      options?: { signal?: AbortSignal },
+    ): Promise<string>;
 
     translateStreaming(
       input: string,
-      options?: { signal?: AbortSignal }
+      options?: { signal?: AbortSignal },
     ): ReadableStream<string>;
   }
 }
