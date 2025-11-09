@@ -37,6 +37,7 @@ import { SUPPORTED_BROWSERS } from '@core/constants';
         <main class="max-w-7xl mx-auto px-4">
           @if (!store.hasBrowserSupport()) {
             <app-supported-browsers-message
+              class="block mt-4 mb-12"
               [supportedBrowsers]="supportedBrowsers" />
           }
           <app-operation-mode class="mt-3 sm:mt-4" />
@@ -69,10 +70,8 @@ export class App {
       .execute()
       .pipe(
         tap({
-          next: (hasSupport) => {
-            if (!hasSupport) {
-              this.store.patchState({ hasBrowserSupport: false });
-            }
+          error: () => {
+            this.store.patchState({ hasBrowserSupport: false });
           },
         }),
       )

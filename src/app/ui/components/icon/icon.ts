@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-icon',
   imports: [MatIconModule],
   template: `
-    <mat-icon class="text-primary! grid!">
-      <span class="material-symbols-outlined">
+    <mat-icon class="text-primary! grid!" [style.width.px]="size()" [style.height.px]="size()">
+      <span class="material-symbols-outlined" [style.font-size.px]="size()">
         <ng-content />
       </span>
     </mat-icon>
@@ -14,4 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Icon {}
+export class Icon {
+  size = input<number>(24);
+}
