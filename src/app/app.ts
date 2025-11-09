@@ -5,6 +5,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 
 import { Header, LanguageSelectors, OperationMode, Sidenav } from '@ui/layout';
 import { Store } from '@ui/store';
+import { CheckSupportUsecase } from '@core/use-cases';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -51,5 +53,21 @@ import { Store } from '@ui/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  readonly #checkSupportUsecase = inject(CheckSupportUsecase);
   protected readonly store = inject(Store);
+
+  constructor() {
+    this.#checkSupportUsecase
+      .execute()
+      .pipe(
+        tap({
+          next: (hasSupport) => {
+            if (!hasSupport) {
+              console.log('**Browser not supported** SET IN STORE');
+            }
+          },
+        }),
+      )
+      .subscribe();
+  }
 }

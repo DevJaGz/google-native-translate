@@ -18,10 +18,10 @@ export class CheckSupportUsecase implements Usecase<SupportLangauges, boolean> {
   readonly #browserDetector = inject(BrowserDetectorPort);
   readonly #supportedBrowsers = inject(SUPPORTED_BROWSERS);
 
-  execute(request: SupportLangauges): Observable<boolean> {
+  execute(): Observable<boolean> {
     return forkJoin([
       this.#languageDetector.hasBrowserSupport(),
-      this.#textTranslator.hasBrowserSupport(request),
+      this.#textTranslator.hasBrowserSupport(),
     ]).pipe(map((apiSupport) => this.hasSupport(apiSupport)));
   }
 
@@ -29,16 +29,17 @@ export class CheckSupportUsecase implements Usecase<SupportLangauges, boolean> {
     hasLanguageDetectorSupport,
     hasTextTranslatorSupport,
   ]: boolean[]): boolean {
-    const browserInfo = this.#browserDetector.getInfo();
-    const hasBrowserSupport = this.#supportedBrowsers.find(
-      (browser) =>
-        browser.name === browserInfo.name &&
-        browser.majorVersion >= browserInfo.majorVersion,
+    const currentBrowser = this.#browserDetector.getInfo();
+    const hasBrowserSupport = this.#supportedBrowsers.some(
+      (supportedBrowser) =>
+        supportedBrowser.name === currentBrowser.name &&
+        currentBrowser.majorVersion >= supportedBrowser.majorVersion,
     );
 
     if (!hasBrowserSupport) {
       throw AppError.create({ type: ErrorType.BROWSER_NOT_SUPPORTED });
     }
+    
     if (!hasLanguageDetectorSupport) {
       throw AppError.create({
         type: ErrorType.LANGUAGE_DETECTION_NOT_SUPPORTED,
