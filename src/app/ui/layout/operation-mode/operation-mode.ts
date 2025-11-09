@@ -1,14 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RoutePath } from '@shared/constants';
 import { TabButton } from '@ui/components';
+import { Store } from '@ui/store';
 
 @Component({
   selector: 'app-operation-mode',
   imports: [TabButton, RouterLink],
   template: `
     <div class="grid">
-      <app-tab-button ariaLabel="Text translation" [routerLink]="routePath.TEXT_TRANSLATION">
+      <app-tab-button
+        ariaLabel="Text translation"
+        [routerLink]="routePath.TEXT_TRANSLATION"
+        [isDisabled]="!store.hasBrowserSupport() || store.isLoading()">
         <ng-container slot="icon">Translate</ng-container>
         <ng-container slot="label">Text</ng-container>
       </app-tab-button>
@@ -22,4 +26,5 @@ import { TabButton } from '@ui/components';
 })
 export class OperationMode {
   protected readonly routePath = RoutePath;
+  protected readonly store = inject(Store);
 }

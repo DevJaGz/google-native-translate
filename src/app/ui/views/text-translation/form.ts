@@ -20,6 +20,13 @@ export class FormService {
   constructor() {
     effect(() => {
       const isLoading = this.#store.isLoading();
+      const hasBrowserSupport = this.#store.hasBrowserSupport();
+
+      if (!hasBrowserSupport) {
+        this.sourceTextControl.disable();
+        return;
+      }
+
       if (isLoading) {
         this.sourceTextControl.disable();
       } else {
@@ -53,7 +60,10 @@ export class FormService {
       if (sourceText === controlText) {
         return;
       }
-      this.sourceTextControl.setValue(sourceText, { emitEvent: false, onlySelf: true });
+      this.sourceTextControl.setValue(sourceText, {
+        emitEvent: false,
+        onlySelf: true,
+      });
     });
   }
 }

@@ -22,7 +22,7 @@ import { Store } from '@ui/store';
     <div class="flex items-center gap-2 h-12 justify-center">
       <app-language-selector
         [handset]="breakpointService.isHandset()"
-        [isDisabled]="store.isLoading()"
+        [isDisabled]="!store.hasBrowserSupport() || store.isLoading()"
         [list]="sourceLanguageList()"
         [languageCodeSelected]="store.sourceLanguageCode()"
         [languageDetectedName]="store.languageDetectedName()"
@@ -35,7 +35,7 @@ import { Store } from '@ui/store';
       >
       <app-language-selector
         [handset]="breakpointService.isHandset()"
-        [isDisabled]="store.isLoading()"
+        [isDisabled]="!store.hasBrowserSupport() || store.isLoading()"
         [list]="targetLanguageList()"
         [languageCodeSelected]="store.targetLanguageCode()"
         (languageSelected)="handleTargetLanguageSelected($event)" />

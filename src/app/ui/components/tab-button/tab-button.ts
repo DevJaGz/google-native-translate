@@ -7,10 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [MatButtonModule, MatIconModule],
   template: `
     <button
+      [disabled]="isDisabled()"
       matButton="outlined"
       class="w-fit mat-tab-button border! bg-google-blue-1f!"
-      [attr.aria-label]="ariaLabel()"
-    >
+      [attr.aria-label]="ariaLabel()">
       <mat-icon class="text-google-mid-blue! w-fit! grid! ">
         <span class="material-symbols-outlined text-xl!">
           <ng-content select="[slot='icon']" />
@@ -21,7 +21,12 @@ import { MatIconModule } from '@angular/material/icon';
       </strong>
     </button>
   `,
-  styles: ``,
+  styles: `
+    :host button:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  `,
   host: {
     '[style.display]': '"block"',
   },
@@ -29,4 +34,5 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class TabButton {
   readonly ariaLabel = input('Tab button');
+  readonly isDisabled = input<boolean>(false);
 }
