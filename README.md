@@ -1,59 +1,137 @@
-# GoogleNativeTranslate
+# 🌐 Google Native Translate
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node Version](https://img.shields.io/badge/node-22.12.0-brightgreen.svg)](https://nodejs.org/)
+[![pnpm Version](https://img.shields.io/badge/pnpm-10.11.1-orange.svg)](https://pnpm.io/)
+[![Angular Version](https://img.shields.io/badge/angular-20-red.svg)](https://angular.io/)
+[![GitHub Stars](https://img.shields.io/github/stars/DevJaGz/google-native-translate?style=social)](https://github.com/DevJaGz/google-native-translate)
+[![GitHub Forks](https://img.shields.io/github/forks/DevJaGz/google-native-translate?style=social)](https://github.com/DevJaGz/google-native-translate)
 
-## Development server
+> Translate text using local AI models in your browser. Fast, private, and works offline.
 
-To start a local development server, run:
+**Google Native Translate** is an independent educational project that leverages the browser's native AI capabilities to provide translation services without sending data to external servers. Built with modern web technologies and clean architecture principles.
+
+## ✨ Features
+
+- 🔒 **Privacy-First** - All translations happen locally in your browser. No data is sent to external servers
+- 📴 **Offline Support** - Works without an internet connection once models are downloaded
+- 🏗️ **Clean Architecture** - Built following Clean and Hexagonal Architecture principles for maintainability and scalability
+- 🎨 **Modern UI** - Beautiful interface with light and dark mode support
+- 🧩 **Best Practices** - Follows industry-standard coding practices and patterns
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src="./docs/images/light.png" alt="Light Mode" width="49%" />
+  <img src="./docs/images/dark.png" alt="Dark Mode" width="49%" />
+</div>
+
+## 🚀 Demo
+
+Check out the live demo: [https://google-native-translate.vercel.app/](https://google-native-translate.vercel.app/)
+
+## 🛠️ Technology Stack
+
+- **Framework**: [Angular 20](https://angular.io/)
+- **UI Components**: [Angular Material](https://material.angular.io/)
+- **Styling**: [TailwindCSS v4](https://tailwindcss.com/)
+- **Architecture**: Clean Architecture & Hexagonal Architecture
+- **Browser APIs**: 
+  - [Language Detector API](https://developer.mozilla.org/en-US/docs/Web/API/LanguageDetector)
+  - [Translator API](https://developer.mozilla.org/en-US/docs/Web/API/Translator)
+
+## 📋 Prerequisites
+
+- **Node.js**: v22.12.0
+- **pnpm**: v10.11.1
+
+## 🔧 Installation
 
 ```bash
-ng serve
+# Clone the repository
+git clone https://github.com/DevJaGz/google-native-translate.git
+
+# Navigate to project directory
+cd google-native-translate
+
+# Install dependencies
+pnpm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🏃 Running the Application
 
 ```bash
-ng generate component component-name
+# Start development server
+pnpm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The application will be available at `http://localhost:4200`
 
-```bash
-ng generate --help
-```
+## 🌍 Browser Compatibility
 
-## Building
+This application uses experimental browser APIs. Browser support varies:
 
-To build the project run:
+- **[Translator API Browser Support](https://developer.mozilla.org/en-US/docs/Web/API/Translator#browser_compatibility)** - Check which browsers support the Translator API
+- **[Language Detector API Browser Support](https://developer.mozilla.org/en-US/docs/Web/API/LanguageDetector#browser_compatibility)** - Check which browsers support the Language Detector API
 
-```bash
-ng build
-```
+> **Note**: These are experimental features and may require specific browser flags to be enabled.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🏛️ Architecture
 
-## Running unit tests
+This project implements **Clean Architecture** and **Hexagonal Architecture** patterns to ensure:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- 🔄 Separation of concerns
+- 🧪 Testability
+- 🔌 Independence from frameworks and external dependencies
+- 📦 Modularity and maintainability
 
-```bash
-ng test
-```
+For detailed architecture documentation, visit: [Architecture Documentation](https://deepwiki.com/DevJaGz/google-native-translate)
 
-## Running end-to-end tests
+## 🗺️ Roadmap
 
-For end-to-end (e2e) testing, run:
+- [ ] 🎤 Speech-to-Text functionality
+- [ ] 🔊 Audio output for translations
+- [ ] 📝 Additional language pairs
+- [ ] 💾 Translation history
+- [ ] 🔖 Favorite translations
 
-```bash
-ng e2e
-```
+## 🤝 Contributing
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## Additional Resources
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Julian Andres Gomez Gomez**
+
+- Website: [https://www.juliangomez.dev/](https://www.juliangomez.dev/)
+- GitHub: [@DevJaGz](https://github.com/DevJaGz)
+
+## ⚠️ Disclaimer
+
+This is an independent educational project and is **not associated with, endorsed by, or sponsored by Google LLC or Google Translate**. All trademarks are the property of their respective owners.
+
+## 🙏 Acknowledgments
+
+- Thanks to the browser vendors for implementing native translation APIs
+- Angular team for the amazing framework
+- The open-source community for inspiration and tools
+
+---
+
+<div align="center">
+  Made with ❤️ by <a href="https://www.juliangomez.dev/">Julian Gomez</a>
+</div>
+
+<div align="center">
+  ⭐ Star this repository if you find it helpful!
+</div>
