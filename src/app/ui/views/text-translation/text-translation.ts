@@ -34,7 +34,7 @@ type MonitorProgressEvent = {
   ],
   template: `
     <div
-      class="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-x-4 gap-y-0">
+      class="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-4">
       <form>
         <mat-form-field
           class="w-full max-w-xl min-h-48"
