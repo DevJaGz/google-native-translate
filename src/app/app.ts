@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -34,7 +39,7 @@ import { SUPPORTED_BROWSERS } from '@core/constants';
       </mat-drawer>
       <mat-drawer-content>
         <app-header />
-        <main class="max-w-7xl mx-auto px-4">
+        <main class="max-w-7xl mx-auto px-4 mb-4">
           @if (!store.hasBrowserSupport()) {
             <app-supported-browsers-message
               class="block mt-4 mb-12"
@@ -60,12 +65,12 @@ import { SUPPORTED_BROWSERS } from '@core/constants';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
+export class App implements OnInit {
   readonly #checkSupportUsecase = inject(CheckSupportUsecase);
   protected readonly supportedBrowsers = inject(SUPPORTED_BROWSERS);
   protected readonly store = inject(Store);
 
-  constructor() {
+  ngOnInit(): void {
     this.#checkSupportUsecase
       .execute()
       .pipe(
